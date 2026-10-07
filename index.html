@@ -2,8 +2,8 @@
 <html lang="de" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FilouMeet - Videokonferenzen mit WebRTC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FilouMeet - Sichere Videokonferenzen</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,547 +12,664 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: { 50: '#f5f6f8', 100: '#ebedf2', 500: '#0f172a', 600: '#020617', 900: '#000000' }
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
                     }
                 }
             }
         }
     </script>
     <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom animations & transitions */
         @keyframes pulse-ring {
-            0% { transform: scale(0.98); opacity: 0.9; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1.02); opacity: 0; box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.98); opacity: 0; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
-        .speaking-ring {
-            animation: pulse-ring 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        .speaking-glow {
+            animation: pulse-ring 1.5s infinite ease-in-out;
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.7);
         }
-        .slash-line {
-            transition: stroke-dashoffset 0.3s ease-in-out;
-            stroke-dasharray: 40;
-            stroke-dashoffset: 0;
-        }
-        .slash-hidden {
-            stroke-dashoffset: 40;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0px) scale(0.8); opacity: 1; }
-            100% { transform: translateY(-180px) scale(1.4); opacity: 0; }
+        @keyframes float-up {
+            0% { transform: translateY(0px) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-120px) scale(1.4); opacity: 0; }
         }
         .floating-reaction {
-            animation: floatUp 2.5s ease-out forwards;
+            animation: float-up 2.2s ease-out forwards;
+        }
+        /* Hide scrollbars for slick mobile drawers */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-slate-900 selection:text-white dark:selection:bg-white dark:selection:text-slate-900">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
 
-    <header class="h-16 border-b border-slate-200 dark:border-slate-800 px-6 flex items-center justify-between bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="router.navigate('home')">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow-md font-bold text-lg">
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="router.navigate('lobby')">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-brand-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
                 F
             </div>
-            <span class="font-bold text-lg tracking-tight">FilouMeet</span>
+            <div>
+                <h1 class="font-bold text-lg leading-tight tracking-tight">FilouMeet</h1>
+                <p class="text-xs text-slate-500 dark:text-slate-400">Secure Video Rooms</p>
+            </div>
         </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="toggleDarkMode()" class="p-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Dark/Light Mode">
-                <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+
+        <div class="flex items-center space-x-2 sm:space-x-4">
+            <!-- Dark Mode Toggle -->
+            <button onclick="toggleDarkMode()" class="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300" title="Design wechseln">
+                <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
             </button>
+            <div id="nav-meeting-info" class="hidden items-center space-x-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="nav-room-code-display" class="font-mono font-semibold"></span>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container App -->
-    <main id="app" class="flex-1 flex flex-col">
-        <!-- Dynamischer Inhalt -->
+    <!-- Main Content Container -->
+    <main class="flex-1 flex flex-col relative overflow-hidden">
+
+        <!-- VIEW 1: LOBBY & PRE-JOIN SETUP -->
+        <div id="view-lobby" class="flex-1 flex items-center justify-center p-4 sm:p-6">
+            <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
+                <div class="text-center mb-6">
+                    <h2 class="text-2xl font-bold tracking-tight">Meeting beitreten</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Konfiguriere Kamera & Audio vor dem Start</p>
+                </div>
+
+                <!-- Preview Camera Container -->
+                <div class="relative w-full aspect-video bg-slate-900 rounded-2xl overflow-hidden mb-6 shadow-inner flex items-center justify-center">
+                    <video id="preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
+                    <div id="preview-avatar-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-white hidden">
+                        <div id="preview-avatar-circle" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold uppercase mb-2 shadow-lg bg-brand-600">F</div>
+                        <span class="text-xs text-slate-400">Kamera deaktiviert</span>
+                    </div>
+                    <!-- Audio Level Meter inside Lobby -->
+                    <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center space-x-2 text-white text-xs">
+                        <span id="preview-mic-status-icon" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                        <span id="preview-mic-label">Mikrofon aktiv</span>
+                    </div>
+                </div>
+
+                <!-- Setup Controls (Cam/Mic toggles) -->
+                <div class="flex items-center justify-center space-x-4 mb-6">
+                    <button onclick="togglePreviewCam()" id="preview-btn-cam" class="p-3.5 rounded-full bg-slate-900 text-white dark:bg-slate-800 hover:scale-105 transition shadow-md">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </button>
+                    <button onclick="togglePreviewMic()" id="preview-btn-mic" class="p-3.5 rounded-full bg-slate-900 text-white dark:bg-slate-800 hover:scale-105 transition shadow-md">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Input form -->
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mb-1.5">Dein Name</label>
+                        <input type="text" id="input-username" value="Professor Filou" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium" placeholder="Name eingeben...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mb-1.5">Meeting Code / ID</label>
+                        <div class="flex space-x-2">
+                            <input type="text" id="input-room-code" value="filou-room-1" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono text-sm font-semibold" placeholder="z.B. masterclass">
+                            <button onclick="generateRandomRoom()" class="px-4 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold rounded-xl transition">Neu</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mb-1.5">Avatar Farbe</label>
+                        <div class="flex items-center space-x-3">
+                            <input type="color" id="input-color" value="#22c55e" class="w-10 h-10 rounded-xl border-0 cursor-pointer bg-transparent">
+                            <span class="text-xs text-slate-500">Wähle deine Profilfarbe für Initialen-Avatare</span>
+                        </div>
+                    </div>
+
+                    <button onclick="joinMeeting()" class="w-full mt-2 py-3.5 bg-slate-900 dark:bg-brand-600 text-white rounded-xl font-bold text-sm shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2">
+                        <span>Meeting betreten</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 2: ACTIVE MEETING ROOM -->
+        <div id="view-meeting" class="hidden flex-1 flex flex-col lg:flex-row relative overflow-hidden h-full">
+            
+            <!-- Main Video Grid Area -->
+            <div class="flex-1 flex flex-col p-3 sm:p-4 lg:p-6 overflow-y-auto relative pb-24 lg:pb-20">
+                
+                <!-- Room Status Bar -->
+                <div class="flex items-center justify-between mb-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-sm">
+                    <div class="flex items-center space-x-3">
+                        <span class="font-bold text-sm" id="room-title-display">Meeting</span>
+                        <span class="text-xs text-slate-400">|</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 flex items-center space-x-1">
+                            <svg class="w-3.5 h-3.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <span id="participant-count">1</span> Teilnehmer
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="copyInviteLink()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold rounded-xl transition flex items-center space-x-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                            <span>Link kopieren</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Video Grid - Optimized for Mobile & Desktop -->
+                <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 flex-1 auto-rows-fr">
+                    <!-- Dynamic Video Tiles injected via JS -->
+                </div>
+
+                <!-- Floating Reactions Layer -->
+                <div id="reactions-container" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
+            </div>
+
+            <!-- Sidebar / Chat / Participants Drawer (Desktop sidebar or Mobile slide-over) -->
+            <div id="sidebar-panel" class="fixed inset-y-0 right-0 z-40 w-full sm:w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col transform translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 shadow-2xl lg:shadow-none">
+                <!-- Sidebar Header -->
+                <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                    <div class="flex space-x-2">
+                        <button onclick="switchTab('chat')" id="tab-btn-chat" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white dark:bg-brand-600 transition">Chat</button>
+                        <button onclick="switchTab('participants')" id="tab-btn-participants" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Teilnehmer (<span id="sidebar-count">1</span>)</button>
+                    </div>
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Tab Content: Chat -->
+                <div id="tab-content-chat" class="flex-1 flex flex-col overflow-hidden">
+                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
+                        <div class="text-center my-2">
+                            <span class="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-3 py-1 rounded-full">Meeting gestartet. Willkommen bei FilouMeet!</span>
+                        </div>
+                    </div>
+                    <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
+                        <form onsubmit="sendChatMessage(event)" class="flex space-x-2">
+                            <input type="text" id="chat-input" placeholder="Nachricht schreiben..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+                            <button type="submit" class="px-4 py-2.5 bg-slate-900 dark:bg-brand-600 text-white rounded-xl text-xs font-bold hover:opacity-90 transition">Senden</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Participants List -->
+                <div id="tab-content-participants" class="hidden flex-1 flex flex-col overflow-y-auto p-4 space-y-3">
+                    <div id="participants-list" class="space-y-2">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Control Bar (Fixed mobile-friendly floating pill) -->
+            <div class="absolute bottom-4 left-0 right-0 z-30 flex items-center justify-center px-4 pointer-events-none">
+                <div class="pointer-events-auto bg-slate-900/90 dark:bg-slate-900/95 backdrop-blur-md border border-slate-700/50 p-2.5 rounded-2xl shadow-2xl flex items-center space-x-2 sm:space-x-3">
+                    
+                    <!-- Mic Toggle -->
+                    <button onclick="toggleMeetingMic()" id="ctrl-mic" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition relative group" title="Mikrofon ein/aus">
+                        <svg id="icon-mic-on" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                        <svg id="icon-mic-off" class="w-5 h-5 text-rose-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2 2m0-2l-2 2"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 10a6 6 0 01-9.338 4.981L17 10.02v-.02z"></path></svg>
+                    </button>
+
+                    <!-- Camera Toggle -->
+                    <button onclick="toggleMeetingCam()" id="ctrl-cam" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition relative" title="Kamera ein/aus">
+                        <svg id="icon-cam-on" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        <svg id="icon-cam-off" class="w-5 h-5 text-rose-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-12.728 12.728M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </button>
+
+                    <div class="h-6 w-px bg-slate-700 mx-1"></div>
+
+                    <!-- Hand Raise Button -->
+                    <button onclick="toggleHandRaise()" id="ctrl-hand" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition" title="Hand heben">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path></svg>
+                    </button>
+
+                    <!-- Reactions Popover / Quick Trigger -->
+                    <div class="relative group">
+                        <button class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition text-lg" title="Reaktionen">👍</button>
+                        <div class="absolute bottom-full mb-3 left-1/2 transform -translate-x-1/2 bg-slate-800 border border-slate-700 p-2 rounded-2xl shadow-xl hidden group-hover:flex space-x-2">
+                            <button onclick="sendReaction('👍')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">👍</button>
+                            <button onclick="sendReaction('❤️')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">❤️</button>
+                            <button onclick="sendReaction('👏')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">👏</button>
+                            <button onclick="sendReaction('🔥')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">🔥</button>
+                            <button onclick="sendReaction('😂')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">😂</button>
+                        </div>
+                    </div>
+
+                    <!-- Chat / Drawer Toggle (Mobile) -->
+                    <button onclick="toggleSidebar()" class="lg:hidden p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition relative" title="Chat öffnen">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    </button>
+
+                    <div class="h-6 w-px bg-slate-700 mx-1"></div>
+
+                    <!-- Leave Room Button -->
+                    <button onclick="leaveMeeting()" class="px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg transition flex items-center space-x-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        <span class="hidden sm:inline">Verlassen</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
     </main>
 
-    <footer class="py-4 text-center text-xs text-slate-400 dark:text-slate-600 border-t border-slate-200 dark:border-slate-800">
-        FilouMeet &bull; Echtzeit-Videokonferenzen mit WebRTC MediaStream & Live-Chat
-    </footer>
-
+    <!-- Application Logic -->
     <script>
+        // --- State Management ---
         const state = {
-            view: 'home', // 'home', 'lobby', 'meeting', 'rejoin'
-            userName: 'Maximilian',
-            userColor: 'bg-indigo-600',
-            meetingCode: '',
-            isHost: false,
-            micOn: true,
-            camOn: true,
-            isMutedAll: false,
-            isLocked: false,
-            handRaised: false,
+            currentView: 'lobby',
+            username: 'Professor Filou',
+            roomCode: 'filou-room-1',
+            color: '#22c55e',
+            isCamOn: true,
+            isMicOn: true,
+            isHandRaised: false,
             localStream: null,
             audioContext: null,
             analyser: null,
-            isSpeaking: false,
-            chatMessages: [
-                { sender: 'System', text: 'Willkommen bei FilouMeet! Kamera und Mikrofon sind aktiv.', time: '14:00' }
-            ],
-            participants: [
-                { id: '2', name: 'Sarah Becker', color: 'bg-emerald-600', mic: false, cam: true, speaking: false, hand: true, isHost: false },
-                { id: '3', name: 'Julian Weber', color: 'bg-amber-600', mic: true, cam: false, speaking: false, hand: false, isHost: false }
-            ]
+            microphone: null,
+            audioLevelInterval: null,
+            participants: [],
+            chatMessages: []
         };
 
-        const colors = [
-            'bg-blue-600', 'bg-indigo-600', 'bg-violet-600', 'bg-purple-600', 
-            'bg-pink-600', 'bg-rose-600', 'bg-red-600', 'bg-orange-600', 
-            'bg-amber-600', 'bg-emerald-600', 'bg-teal-600', 'bg-cyan-600', 'bg-slate-800'
-        ];
-
-        // Hash Router für GitHub Pages
+        // --- Router Implementation for Hash Navigation ---
         const router = {
-            navigate(viewName, params = {}) {
-                state.view = viewName;
-                if (params.code) state.meetingCode = params.code;
-                if (params.isHost !== undefined) state.isHost = params.isHost;
-                window.location.hash = viewName + (state.meetingCode ? '/' + state.meetingCode : '');
-                render();
-                if (viewName === 'meeting') {
-                    initWebRTCStream();
+            init() {
+                window.addEventListener('hashchange', () => this.handleRoute());
+                this.handleRoute();
+            },
+            handleRoute() {
+                const hash = window.location.hash.replace('#', '');
+                if (hash.startsWith('meeting=')) {
+                    const room = hash.split('=')[1];
+                    if (room) {
+                        document.getElementById('input-room-code').value = room;
+                        if (state.currentView !== 'meeting') {
+                            // Auto join if arriving via direct share link
+                            joinMeeting(true);
+                        }
+                    }
+                } else {
+                    if (state.currentView === 'meeting') {
+                        leaveMeeting(false);
+                    }
+                    this.showView('lobby');
                 }
             },
-            init() {
-                const hash = window.location.hash.replace('#', '');
-                if (hash.startsWith('meeting')) {
-                    const parts = hash.split('/');
-                    state.meetingCode = parts[1] || 'filou-room-101';
-                    state.view = 'meeting';
-                    initWebRTCStream();
-                } else if (hash.startsWith('lobby')) {
-                    state.view = 'lobby';
+            showView(viewName) {
+                state.currentView = viewName;
+                const lobby = document.getElementById('view-lobby');
+                const meeting = document.getElementById('view-meeting');
+                const navInfo = document.getElementById('nav-meeting-info');
+
+                if (viewName === 'lobby') {
+                    lobby.classList.remove('hidden');
+                    meeting.classList.add('hidden');
+                    navInfo.classList.add('hidden');
+                    startPreviewStream();
                 } else {
-                    state.view = 'home';
+                    lobby.classList.add('hidden');
+                    meeting.classList.remove('hidden');
+                    navInfo.classList.remove('hidden');
+                    document.getElementById('nav-room-code-display').textContent = state.roomCode;
+                    document.getElementById('room-title-display').textContent = `Raum: ${state.roomCode}`;
                 }
-                render();
+            },
+            navigate(route, param = '') {
+                if (route === 'lobby') {
+                    window.location.hash = '';
+                } else if (route === 'meeting') {
+                    window.location.hash = `meeting=${param}`;
+                }
             }
         };
 
-        window.addEventListener('hashchange', () => router.init());
+        // --- Dark Mode ---
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                html.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
 
-        async function initWebRTCStream() {
+        // --- Media Stream & Preview ---
+        async function startPreviewStream() {
             try {
                 if (!state.localStream) {
                     state.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                 }
-                attachLocalStreamToVideo();
-                setupAudioAnalyser(state.localStream);
+                const previewVideo = document.getElementById('preview-video');
+                previewVideo.srcObject = state.localStream;
+                previewVideo.style.display = 'block';
+                document.getElementById('preview-avatar-fallback').classList.add('hidden');
+                initAudioAnalyzer(state.localStream);
             } catch (err) {
-                console.warn('WebRTC MediaStream Zugriff verweigert oder nicht verfügbar:', err);
+                console.warn('Kamera/Mikrofon nicht verfügbar:', err);
+                document.getElementById('preview-video').style.display = 'none';
+                document.getElementById('preview-avatar-fallback').classList.remove('hidden');
+                // Set initial letter
+                const name = document.getElementById('input-username').value || 'User';
+                const circle = document.getElementById('preview-avatar-circle');
+                circle.textContent = name.charAt(0).toUpperCase();
+                circle.style.backgroundColor = document.getElementById('input-color').value;
             }
         }
 
-        function attachLocalStreamToVideo() {
-            const videoEl = document.getElementById('local-video-element');
-            if (videoEl && state.localStream) {
-                videoEl.srcObject = state.localStream;
-                videoEl.muted = true;
+        function togglePreviewCam() {
+            state.isCamOn = !state.isCamOn;
+            if (state.localStream) {
+                const videoTracks = state.localStream.getVideoTracks();
+                videoTracks.forEach(track => track.enabled = state.isCamOn);
             }
+            const btn = document.getElementById('preview-btn-cam');
+            btn.classList.toggle('bg-rose-600', !state.isCamOn);
+            btn.classList.toggle('bg-slate-900', state.isCamOn);
         }
 
-        function setupAudioAnalyser(stream) {
+        function togglePreviewMic() {
+            state.isMicOn = !state.isMicOn;
+            if (state.localStream) {
+                const audioTracks = state.localStream.getAudioTracks();
+                audioTracks.forEach(track => track.enabled = state.isMicOn);
+            }
+            const btn = document.getElementById('preview-btn-mic');
+            btn.classList.toggle('bg-rose-600', !state.isMicOn);
+            btn.classList.toggle('bg-slate-900', state.isMicOn);
+            const statusIcon = document.getElementById('preview-mic-status-icon');
+            statusIcon.classList.toggle('bg-rose-500', !state.isMicOn);
+            statusIcon.classList.toggle('bg-emerald-400', state.isMicOn);
+            document.getElementById('preview-mic-label').textContent = state.isMicOn ? 'Mikrofon aktiv' : 'Stummgeschaltet';
+        }
+
+        // --- Web Audio API Speaking Detection ---
+        function initAudioAnalyzer(stream) {
             try {
-                if (!state.audioContext) {
-                    state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    const source = state.audioContext.createMediaStreamSource(stream);
-                    state.analyser = state.audioContext.createAnalyser();
-                    state.analyser.fftSize = 512;
-                    source.connect(state.analyser);
-                    
-                    const dataArray = new Uint8Array(state.analyser.frequencyBinCount);
-                    const checkAudioLevel = () => {
-                        if (state.view === 'meeting' && state.analyser && state.micOn) {
-                            state.analyser.getByteFrequencyData(dataArray);
-                            let sum = 0;
-                            for (let i = 0; i < dataArray.length; i++) {
-                                sum += dataArray[i];
-                            }
-                            let avg = sum / dataArray.length;
-                            state.isSpeaking = avg > 12; // Schwellenwert für Sprachaktivität
-                            
-                            // UI Indikator aktualisieren
-                            const ringEl = document.getElementById('local-speaking-ring');
-                            if (ringEl) {
-                                if (state.isSpeaking) {
-                                    ringEl.classList.remove('hidden');
-                                } else {
-                                    ringEl.classList.add('hidden');
-                                }
-                            }
+                if (!window.AudioContext && !window.webkitAudioContext) return;
+                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                state.analyser = state.audioContext.createAnalyser();
+                state.microphone = state.audioContext.createMediaStreamSource(stream);
+                state.microphone.connect(state.analyser);
+                state.analyser.fftSize = 256;
+                const bufferLength = state.analyser.frequencyBinCount;
+                const dataArray = new Uint8Array(bufferLength);
+
+                if (state.audioLevelInterval) clearInterval(state.audioLevelInterval);
+                state.audioLevelInterval = setInterval(() => {
+                    if (!state.analyser || !state.isMicOn) return;
+                    state.analyser.getByteFrequencyData(dataArray);
+                    let sum = 0;
+                    for (let i = 0; i < bufferLength; i++) {
+                        sum += dataArray[i];
+                    }
+                    let average = sum / bufferLength;
+                    const localTile = document.getElementById('tile-local');
+                    if (localTile) {
+                        if (average > 25) {
+                            localTile.classList.add('speaking-glow', 'border-brand-500');
+                        } else {
+                            localTile.classList.remove('speaking-glow', 'border-brand-500');
                         }
-                        requestAnimationFrame(checkAudioLevel);
-                    };
-                    checkAudioLevel();
-                }
+                    }
+                }, 200);
             } catch (e) {
-                console.log('Audio Analyser konnte nicht gestartet werden:', e);
+                console.log('Audio analyzer error:', e);
             }
         }
 
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            html.classList.toggle('dark');
-            const isDark = html.classList.contains('dark');
-            const icon = document.getElementById('theme-icon');
-            if (isDark) {
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>';
-            } else {
-                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>';
+        function generateRandomRoom() {
+            const code = 'filou-' + Math.random().toString(36.substring(2, 8));
+            document.getElementById('input-room-code').value = code;
+        }
+
+        // --- Join & Leave Meeting ---
+        async function joinMeeting(fromRoute = false) {
+            state.username = document.getElementById('input-username').value.trim() || 'Gast';
+            state.roomCode = document.getElementById('input-room-code').value.trim() || 'meeting-1';
+            state.color = document.getElementById('input-color').value || '#22c55e';
+
+            if (!fromRoute) {
+                router.navigate('meeting', state.roomCode);
             }
+
+            router.showView('meeting');
+
+            // Initialize local participant (ZERO FAKE PEOPLE - only real user)
+            state.participants = [{
+                id: 'local-user',
+                name: state.username,
+                color: state.color,
+                isCamOn: state.isCamOn,
+                isMicOn: state.isMicOn,
+                isHandRaised: false,
+                isLocal: true
+            }];
+
+            renderMeetingUI();
         }
 
-        function render() {
-            const app = document.getElementById('app');
-            if (!app) return;
-
-            if (state.view === 'home') {
-                app.innerHTML = renderHome();
-            } else if (state.view === 'lobby') {
-                app.innerHTML = renderLobby();
-            } else if (state.view === 'meeting') {
-                app.innerHTML = renderMeeting();
-                setTimeout(attachLocalStreamToVideo, 50);
-            } else if (state.view === 'rejoin') {
-                app.innerHTML = renderRejoin();
-            }
-        }
-
-        function renderHome() {
-            return `
-                <div class="flex-1 flex flex-col items-center justify-center px-4 max-w-4xl mx-auto text-center py-12">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center text-3xl font-extrabold shadow-2xl mb-6">
-                        F
-                    </div>
-                    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4">Echte Videokonferenzen im Browser.</h1>
-                    <p class="text-lg text-slate-600 dark:text-slate-400 max-w-xl mb-10">
-                        Mit echten WebRTC Kamera- & Mikrofoneingaben, sprechenden Sprach-Ripples, Chat und voller Host-Kontrolle.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-                        <button onclick="startNewMeeting()" class="flex-1 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-semibold py-4 px-6 rounded-2xl shadow-xl transition transform active:scale-95 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                            <span>Meeting erstellen</span>
-                        </button>
-                        <button onclick="goToLobby()" class="flex-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 font-semibold py-4 px-6 rounded-2xl transition transform active:scale-95 flex items-center justify-center space-x-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
-                            <span>Beitreten</span>
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        function startNewMeeting() {
-            state.isHost = true;
-            state.meetingCode = 'filou-' + Math.random().toString(36).substring(2, 7);
-            router.navigate('lobby');
-        }
-
-        function goToLobby() {
-            state.isHost = false;
-            router.navigate('lobby');
-        }
-
-        function renderLobby() {
-            const firstLetter = (state.userName.trim().charAt(0) || 'M').toUpperCase();
-            const colorOptionsHtml = colors.map(c => `
-                <button onclick="selectColor('${c}')" class="w-10 h-10 rounded-full ${c} transition transform hover:scale-110 ${state.userColor === c ? 'ring-4 ring-offset-2 ring-slate-900 dark:ring-white' : ''}"></button>
-            `).join('');
-
-            return `
-                <div class="flex-1 flex items-center justify-center px-4 py-12">
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl">
-                        <h2 class="text-2xl font-bold mb-6 text-center">Meeting Vorbereitung</h2>
-                        
-                        <div class="flex flex-col items-center mb-6">
-                            <div class="w-24 h-24 rounded-full ${state.userColor} text-white flex items-center justify-center text-4xl font-extrabold shadow-lg mb-3 transition-all duration-300">
-                                ${firstLetter}
-                            </div>
-                            <span class="text-xs text-slate-500">Kreis-Avatar (Initial aus Name)</span>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Dein Name</label>
-                            <input type="text" id="input-name" value="${state.userName}" oninput="updateName(this.value)" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white font-medium">
-                        </div>
-
-                        <div class="mb-6">
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Avatar Farbe</label>
-                            <div class="flex flex-wrap gap-2 justify-center">
-                                ${colorOptionsHtml}
-                            </div>
-                        </div>
-
-                        ${!state.isHost ? `
-                        <div class="mb-6">
-                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Meeting Code</label>
-                            <input type="text" id="input-code" value="${state.meetingCode}" oninput="state.meetingCode=this.value" placeholder="z.B. filou-abc12" class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-white font-medium">
-                        </div>
-                        ` : `
-                        <div class="mb-6 p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-center">
-                            <span class="text-xs text-slate-500 block">Meeting-Code:</span>
-                            <span class="font-mono font-bold text-lg">${state.meetingCode}</span>
-                        </div>
-                        `}
-
-                        <div class="flex gap-3">
-                            <button onclick="router.navigate('home')" class="w-1/3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 font-semibold py-3.5 rounded-xl transition">Zurück</button>
-                            <button onclick="joinMeeting()" class="w-2/3 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-semibold py-3.5 rounded-xl shadow-lg transition">Beitreten</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateName(val) {
-            state.userName = val || 'Gast';
-            const initial = (state.userName.trim().charAt(0) || 'G').toUpperCase();
-            const preview = document.querySelector('.w-24.h-24');
-            if (preview) preview.innerText = initial;
-        }
-
-        function selectColor(color) {
-            state.userColor = color;
-            render();
-        }
-
-        function joinMeeting() {
-            router.navigate('meeting', { code: state.meetingCode || 'filou-room-101' });
-        }
-
-        function renderMeeting() {
-            const myInitial = (state.userName.trim().charAt(0) || 'G').toUpperCase();
-            
-            let tilesHtml = `
-                <!-- Eigene Kachel mit echtem Video-Feed -->
-                <div class="relative bg-slate-900 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col items-center justify-center cursor-pointer group transition transform hover:scale-[1.01]">
-                    <div id="local-speaking-ring" class="absolute inset-0 rounded-3xl speaking-ring pointer-events-none hidden"></div>
-                    
-                    <video id="local-video-element" autoplay playsinline class="absolute inset-0 w-full h-full object-cover ${state.camOn ? '' : 'hidden'}"></video>
-                    
-                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent flex items-center justify-center ${state.camOn ? 'hidden' : ''}">
-                        <div class="w-28 h-28 rounded-full ${state.userColor} text-white flex items-center justify-center text-5xl font-extrabold shadow-2xl">
-                            ${myInitial}
-                        </div>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-xl text-white text-xs font-medium flex items-center space-x-2 z-10">
-                        <span>${state.userName} (Du)</span>
-                        ${state.handRaised ? '<span class="text-amber-400">✋</span>' : ''}
-                        ${!state.micOn ? '<svg class="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2.5"/></svg>' : ''}
-                    </div>
-                </div>
-            `;
-
-            state.participants.forEach(p => {
-                tilesHtml += `
-                    <div class="relative bg-slate-900 dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl border border-slate-800 flex flex-col items-center justify-center cursor-pointer group transition transform hover:scale-[1.01]">
-                        ${p.mic && p.speaking ? '<div class="absolute inset-0 rounded-3xl speaking-ring pointer-events-none"></div>' : ''}
-                        
-                        <div class="w-28 h-28 rounded-full ${p.color} text-white flex items-center justify-center text-5xl font-extrabold shadow-2xl">
-                            ${p.name.charAt(0).toUpperCase()}
-                        </div>
-
-                        <div class="absolute bottom-4 left-4 bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-xl text-white text-xs font-medium flex items-center space-x-2 z-10">
-                            <span>${p.name}</span>
-                            ${p.hand ? '<span class="text-amber-400">✋</span>' : ''}
-                            ${!p.mic ? '<svg class="w-3.5 h-3.5 text-red-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2.5"/></svg>' : ''}
-                        </div>
-                    </div>
-                `;
-            });
-
-            const chatHtml = state.chatMessages.map(m => `
-                <div class="mb-3">
-                    <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
-                        <span class="font-semibold text-slate-700 dark:text-slate-300">${m.sender}</span>
-                        <span>${m.time}</span>
-                    </div>
-                    <div class="bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl text-sm">${m.text}</div>
-                </div>
-            `).join('');
-
-            return `
-                <div class="flex-1 flex flex-col h-[calc(100vh-4rem)] relative overflow-hidden bg-slate-950">
-                    
-                    <div id="reactions-container" class="absolute inset-0 pointer-events-none z-30 overflow-hidden"></div>
-
-                    <div class="flex-1 flex overflow-hidden p-4 gap-4">
-                        
-                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4 overflow-y-auto">
-                            ${tilesHtml}
-                        </div>
-
-                        <!-- Sidebar / Chat -->
-                        <div class="w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl flex flex-col shadow-2xl overflow-hidden">
-                            
-                            <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                                <span class="font-bold text-sm">Meeting Chat & Aktionen</span>
-                                ${state.isHost ? '<span class="bg-amber-500/10 text-amber-500 text-[10px] font-bold px-2 py-0.5 rounded-full">Host</span>' : ''}
-                            </div>
-
-                            ${state.isHost ? `
-                                <div class="p-3 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-2">
-                                    <button onclick="toggleMuteAll()" class="text-xs font-semibold py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
-                                        ${state.isMutedAll ? 'Alle Entmuten' : 'Alle Stummschalten'}
-                                    </button>
-                                    <button onclick="toggleLockRoom()" class="text-xs font-semibold py-2 px-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 transition">
-                                        ${state.isLocked ? 'Raum entsperren' : 'Raum sperren'}
-                                    </button>
-                                </div>
-                            ` : ''}
-
-                            <div id="chat-scroll" class="flex-1 p-4 overflow-y-auto">
-                                ${chatHtml}
-                            </div>
-
-                            <div class="p-3 border-t border-slate-200 dark:border-slate-800 flex items-center space-x-2">
-                                <input type="text" id="chat-input" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Nachricht schreiben..." class="flex-1 bg-slate-100 dark:bg-slate-800 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-slate-900 dark:focus:ring-white">
-                                <button onclick="sendChatMessage()" class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 p-2.5 rounded-xl font-bold hover:opacity-90 transition">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Unten: Steuerungsleiste -->
-                    <div class="h-20 bg-slate-900/90 backdrop-blur-xl border-t border-slate-800 px-6 flex items-center justify-between z-40">
-                        
-                        <div class="flex items-center space-x-3 text-white text-sm font-medium">
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Code: <strong class="font-mono">${state.meetingCode}</strong></span>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <!-- Mic Button -->
-                            <button onclick="toggleMic()" class="w-12 h-12 rounded-full ${state.micOn ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-red-600 text-white'} flex items-center justify-center shadow-lg transition transform active:scale-90 relative" title="Mikrofon">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
-                                    <line x1="3" y1="3" x2="21" y2="21" class="slash-line ${state.micOn ? 'slash-hidden' : ''}" stroke="currentColor" stroke-width="2.5"/>
-                                </svg>
-                            </button>
-
-                            <!-- Cam Button -->
-                            <button onclick="toggleCam()" class="w-12 h-12 rounded-full ${state.camOn ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-red-600 text-white'} flex items-center justify-center shadow-lg transition transform active:scale-90 relative" title="Kamera">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                                    <line x1="3" y1="3" x2="21" y2="21" class="slash-line ${state.camOn ? 'slash-hidden' : ''}" stroke="currentColor" stroke-width="2.5"/>
-                                </svg>
-                            </button>
-
-                            <!-- Hand heben -->
-                            <button onclick="toggleHand()" class="w-12 h-12 rounded-full ${state.handRaised ? 'bg-amber-500 text-white' : 'bg-slate-800 hover:bg-slate-700 text-white'} flex items-center justify-center shadow-lg transition transform active:scale-90 text-lg" title="Hand heben">
-                                ✋
-                            </button>
-
-                            <!-- Reaktionen Emojis -->
-                            <button onclick="sendReaction('👍')" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center shadow-lg transition transform active:scale-90 text-lg" title="Daumen hoch">👍</button>
-                            <button onclick="sendReaction('❤️')" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center shadow-lg transition transform active:scale-90 text-lg" title="Herz">❤️</button>
-                            <button onclick="sendReaction('🔥')" class="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 text-white flex items-center justify-center shadow-lg transition transform active:scale-90 text-lg" title="Fire">🔥</button>
-                        </div>
-
-                        <div>
-                            <button onclick="leaveMeeting()" class="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2.5 rounded-2xl shadow-lg transition transform active:scale-95 flex items-center space-x-2">
-                                <span>Verlassen</span>
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-            `;
-        }
-
-        function toggleMic() {
-            state.micOn = !state.micOn;
-            if (state.localStream) {
-                state.localStream.getAudioTracks().forEach(track => track.enabled = state.micOn);
-            }
-            render();
-        }
-
-        function toggleCam() {
-            state.camOn = !state.camOn;
-            if (state.localStream) {
-                state.localStream.getVideoTracks().forEach(track => track.enabled = state.camOn);
-            }
-            render();
-        }
-
-        function toggleHand() {
-            state.handRaised = !state.handRaised;
-            render();
-        }
-
-        function toggleMuteAll() {
-            state.isMutedAll = !state.isMutedAll;
-            state.participants.forEach(p => p.mic = !state.isMutedAll);
-            render();
-        }
-
-        function toggleLockRoom() {
-            state.isLocked = !state.isLocked;
-            state.chatMessages.push({ sender: 'System', text: state.isLocked ? 'Raum wurde gesperrt.' : 'Raum wurde entsperrt.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-            render();
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chat-input');
-            if (!input || !input.value.trim()) return;
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            state.chatMessages.push({ sender: state.userName, text: input.value.trim(), time: timeStr });
-            input.value = '';
-            render();
-            const scroll = document.getElementById('chat-scroll');
-            if (scroll) scroll.scrollTop = scroll.scrollHeight;
-        }
-
-        function sendReaction(emoji) {
-            const container = document.getElementById('reactions-container');
-            if (!container) return;
-            const el = document.createElement('div');
-            el.className = 'absolute bottom-12 left-1/2 text-4xl floating-reaction pointer-events-none';
-            el.style.marginLeft = (Math.random() * 240 - 120) + 'px';
-            el.innerText = emoji;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 2500);
-        }
-
-        function leaveMeeting() {
+        function leaveMeeting(updateRouter = true) {
             if (state.localStream) {
                 state.localStream.getTracks().forEach(track => track.stop());
                 state.localStream = null;
             }
-            router.navigate('rejoin');
+            if (state.audioLevelInterval) clearInterval(state.audioLevelInterval);
+            if (state.audioContext) state.audioContext.close();
+
+            if (updateRouter) {
+                router.navigate('lobby');
+            }
         }
 
-        function renderRejoin() {
-            return `
-                <div class="flex-1 flex items-center justify-center px-4 py-12">
-                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 max-w-md w-full text-center shadow-2xl">
-                        <div class="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
-                            ✓
-                        </div>
-                        <h2 class="text-2xl font-bold mb-2">Meeting verlassen</h2>
-                        <p class="text-slate-600 dark:text-slate-400 text-sm mb-8">Du kannst jederzeit wieder beitreten oder zur Startseite zurückkehren.</p>
-                        
-                        <div class="flex flex-col gap-3">
-                            <button onclick="joinMeeting()" class="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-semibold py-3.5 rounded-xl shadow-lg transition">
-                                Wieder beitreten
-                            </button>
-                            <button onclick="router.navigate('home')" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 font-semibold py-3.5 rounded-xl transition">
-                                Zur Startseite
-                            </button>
-                        </div>
+        // --- Active Meeting Controls ---
+        function toggleMeetingMic() {
+            state.isMicOn = !state.isMicOn;
+            if (state.localStream) {
+                state.localStream.getAudioTracks().forEach(track => track.enabled = state.isMicOn);
+            }
+            const p = state.participants.find(x => x.isLocal);
+            if (p) p.isMicOn = state.isMicOn;
+
+            // Update UI buttons
+            document.getElementById('icon-mic-on').classList.toggle('hidden', !state.isMicOn);
+            document.getElementById('icon-mic-off').classList.toggle('hidden', state.isMicOn);
+            renderMeetingUI();
+        }
+
+        function toggleMeetingCam() {
+            state.isCamOn = !state.isCamOn;
+            if (state.localStream) {
+                state.localStream.getVideoTracks().forEach(track => track.enabled = state.isCamOn);
+            }
+            const p = state.participants.find(x => x.isLocal);
+            if (p) p.isCamOn = state.isCamOn;
+
+            document.getElementById('icon-cam-on').classList.toggle('hidden', !state.isCamOn);
+            document.getElementById('icon-cam-off').classList.toggle('hidden', state.isCamOn);
+            renderMeetingUI();
+        }
+
+        function toggleHandRaise() {
+            state.isHandRaised = !state.isHandRaised;
+            const p = state.participants.find(x => x.isLocal);
+            if (p) p.isHandRaised = state.isHandRaised;
+            const btn = document.getElementById('ctrl-hand');
+            btn.classList.toggle('bg-amber-600', state.isHandRaised);
+            btn.classList.toggle('bg-slate-800', !state.isHandRaised);
+            renderMeetingUI();
+        }
+
+        function sendReaction(emoji) {
+            const container = document.getElementById('reactions-container');
+            const el = document.createElement('div');
+            el.className = 'absolute bottom-12 left-1/2 transform -translate-x-1/2 text-4xl floating-reaction pointer-events-none';
+            el.style.left = `${Math.random() * 80 + 10}%`;
+            el.textContent = emoji;
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 2200);
+        }
+
+        function copyInviteLink() {
+            const url = window.location.href;
+            document.execCommand('copy');
+            // Fallback modern copy
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url);
+            }
+            showNotification('Meeting-Link in Zwischenablage kopiert!');
+        }
+
+        function showNotification(msg) {
+            const div = document.createElement('div');
+            div.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-4 py-2 rounded-2xl shadow-xl text-xs font-bold z-50 transition animate-bounce';
+            div.textContent = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 2500);
+        }
+
+        // --- Sidebar & Mobile Drawer Toggle ---
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar-panel');
+            sidebar.classList.toggle('translate-x-full');
+        }
+
+        function switchTab(tab) {
+            const chatBtn = document.getElementById('tab-btn-chat');
+            const partBtn = document.getElementById('tab-btn-participants');
+            const chatContent = document.getElementById('tab-content-chat');
+            const partContent = document.getElementById('tab-content-participants');
+
+            if (tab === 'chat') {
+                chatBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white dark:bg-brand-600 transition';
+                partBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition';
+                chatContent.classList.remove('hidden');
+                partContent.classList.add('hidden');
+            } else {
+                partBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white dark:bg-brand-600 transition';
+                chatBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition';
+                partContent.classList.remove('hidden');
+                chatContent.classList.add('hidden');
+            }
+        }
+
+        function sendChatMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            state.chatMessages.push({ sender: state.username, text, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
+            input.value = '';
+            renderChatMessages();
+        }
+
+        function renderChatMessages() {
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = state.chatMessages.map(m => `
+                <div class="flex flex-col">
+                    <div class="flex items-center space-x-1.5 mb-0.5">
+                        <span class="font-bold text-[11px] text-slate-700 dark:text-slate-300">${m.sender}</span>
+                        <span class="text-[9px] text-slate-400">${m.time}</span>
+                    </div>
+                    <div class="bg-slate-100 dark:bg-slate-800/80 p-2.5 rounded-2xl text-xs text-slate-800 dark:text-slate-200">
+                        ${m.text}
                     </div>
                 </div>
-            `;
+            `).join('');
+            container.scrollTop = container.scrollHeight;
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        // --- Render UI (Grid & Participants) ---
+        function renderMeetingUI() {
+            const grid = document.getElementById('video-grid');
+            document.getElementById('participant-count').textContent = state.participants.length;
+            document.getElementById('sidebar-count').textContent = state.participants.length;
+
+            // Render Video Grid Tiles
+            grid.innerHTML = state.participants.map(p => {
+                const initial = p.name.charAt(0).toUpperCase();
+                return `
+                    <div id="${p.isLocal ? 'tile-local' : 'tile-' + p.id}" class="relative bg-slate-900 rounded-3xl overflow-hidden aspect-video sm:aspect-auto sm:h-full flex items-center justify-center border-2 border-transparent shadow-lg transition-all">
+                        ${p.isLocal && state.localStream && p.isCamOn ? `
+                            <video autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100" id="local-video-element"></video>
+                        ` : `
+                            <div class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900">
+                                <div class="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold uppercase text-white shadow-xl mb-2" style="background-color: ${p.color};">
+                                    ${initial}
+                                </div>
+                                <span class="text-xs text-slate-400 font-medium">${p.name} (Kamera aus)</span>
+                            </div>
+                        `}
+
+                        <!-- Participant Label & Hand Raise Badge -->
+                        <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center space-x-2 text-white text-xs z-10">
+                            <span class="w-2 h-2 rounded-full ${p.isMicOn ? 'bg-emerald-400' : 'bg-rose-500'}"></span>
+                            <span class="font-semibold">${p.name} ${p.isLocal ? '(Du)' : ''}</span>
+                            ${p.isHandRaised ? '<span class="text-amber-400 ml-1" title="Hand gehoben">✋</span>' : ''}
+                        </div>
+
+                        <!-- Muted Audio or Cam Off Indicators -->
+                        <div class="absolute top-3 right-3 flex space-x-1.5 z-10">
+                            ${!p.isMicOn ? '<div class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-rose-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2 2m0-2l-2 2"></path></svg></div>' : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Bind local video stream if active
+            if (state.localStream) {
+                const localVideoEl = document.getElementById('local-video-element');
+                if (localVideoEl && localVideoEl.srcObject !== state.localStream) {
+                    localVideoEl.srcObject = state.localStream;
+                }
+            }
+
+            // Render Participants List in Sidebar
+            const partList = document.getElementById('participants-list');
+            partList.innerHTML = state.participants.map(p => `
+                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background-color: ${p.color};">
+                            ${p.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold">${p.name} ${p.isLocal ? '(Du)' : ''}</p>
+                            <p class="text-[10px] text-slate-400">${p.isMicOn ? 'Mikrofon aktiv' : 'Stumm'}</p>
+                        </div>
+                    </div>
+                    ${p.isHandRaised ? '<span class="text-amber-400 text-sm">✋</span>' : ''}
+                </div>
+            `).join('');
+        }
+
+        // --- Run on Load ---
+        window.onload = function() {
             router.init();
-        });
+            startPreviewStream();
+        };
     </script>
 </body>
 </html>

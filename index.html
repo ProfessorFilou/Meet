@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" class="light">
+<html lang="de" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -12,664 +12,779 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            900: '#14532d',
+                        filou: {
+                            50: '#f8fafc',
+                            900: '#0f172a',
+                            950: '#020617',
                         }
                     }
                 }
             }
         }
     </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        body { font-family: 'Inter', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
-        /* Custom animations & transitions */
-        @keyframes pulse-ring {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.08); opacity: 0.4; }
-            100% { transform: scale(1); opacity: 0.8; }
+        .dark .glass-panel {
+            background: rgba(2, 6, 23, 0.85);
         }
-        .speaking-glow {
-            animation: pulse-ring 1.5s infinite ease-in-out;
-            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.7);
+        @keyframes floatUp {
+            0% { transform: translateY(0px) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-160px) scale(1.4); opacity: 0; }
         }
-        @keyframes float-up {
-            0% { transform: translateY(0px) scale(0.5); opacity: 1; }
-            100% { transform: translateY(-120px) scale(1.4); opacity: 0; }
+        .floating-emoji {
+            animation: floatUp 2.5s ease-out forwards;
+            pointer-events: none;
         }
-        .floating-reaction {
-            animation: float-up 2.2s ease-out forwards;
+        .active-speaker-ring {
+            box-shadow: 0 0 0 4px #000000, 0 0 20px rgba(0, 0, 0, 0.8);
+            transition: box-shadow 0.2s ease-in-out;
         }
-        /* Hide scrollbars for slick mobile drawers */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        .dark .active-speaker-ring {
+            box-shadow: 0 0 0 4px #ffffff, 0 0 20px rgba(255, 255, 255, 0.6);
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 3px; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
+<body class="h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200 overflow-x-hidden">
 
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 px-4 lg:px-8 h-16 flex items-center justify-between">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="router.navigate('lobby')">
-            <div class="w-10 h-10 rounded-xl bg-slate-900 dark:bg-brand-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
-                F
-            </div>
-            <div>
-                <h1 class="font-bold text-lg leading-tight tracking-tight">FilouMeet</h1>
-                <p class="text-xs text-slate-500 dark:text-slate-400">Secure Video Rooms</p>
-            </div>
-        </div>
-
-        <div class="flex items-center space-x-2 sm:space-x-4">
-            <!-- Dark Mode Toggle -->
-            <button onclick="toggleDarkMode()" class="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition text-slate-600 dark:text-slate-300" title="Design wechseln">
-                <svg id="sun-icon" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                <svg id="moon-icon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-            </button>
-            <div id="nav-meeting-info" class="hidden items-center space-x-2 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full text-xs font-medium">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span id="nav-room-code-display" class="font-mono font-semibold"></span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="flex-1 flex flex-col relative overflow-hidden">
-
-        <!-- VIEW 1: LOBBY & PRE-JOIN SETUP -->
-        <div id="view-lobby" class="flex-1 flex items-center justify-center p-4 sm:p-6">
-            <div class="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
-                <div class="text-center mb-6">
-                    <h2 class="text-2xl font-bold tracking-tight">Meeting beitreten</h2>
-                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Konfiguriere Kamera & Audio vor dem Start</p>
+    <div id="app" class="min-h-full flex flex-col">
+        
+        <!-- Navigation Header -->
+        <header class="w-full border-b border-slate-200 dark:border-slate-800 glass-panel sticky top-0 z-50 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="router.navigate('home')">
+                <div class="w-10 h-10 rounded-2xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-lg font-bold text-lg">
+                    F
                 </div>
-
-                <!-- Preview Camera Container -->
-                <div class="relative w-full aspect-video bg-slate-900 rounded-2xl overflow-hidden mb-6 shadow-inner flex items-center justify-center">
-                    <video id="preview-video" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
-                    <div id="preview-avatar-fallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900 text-white hidden">
-                        <div id="preview-avatar-circle" class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold uppercase mb-2 shadow-lg bg-brand-600">F</div>
-                        <span class="text-xs text-slate-400">Kamera deaktiviert</span>
-                    </div>
-                    <!-- Audio Level Meter inside Lobby -->
-                    <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center space-x-2 text-white text-xs">
-                        <span id="preview-mic-status-icon" class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span id="preview-mic-label">Mikrofon aktiv</span>
-                    </div>
-                </div>
-
-                <!-- Setup Controls (Cam/Mic toggles) -->
-                <div class="flex items-center justify-center space-x-4 mb-6">
-                    <button onclick="togglePreviewCam()" id="preview-btn-cam" class="p-3.5 rounded-full bg-slate-900 text-white dark:bg-slate-800 hover:scale-105 transition shadow-md">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                    </button>
-                    <button onclick="togglePreviewMic()" id="preview-btn-mic" class="p-3.5 rounded-full bg-slate-900 text-white dark:bg-slate-800 hover:scale-105 transition shadow-md">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                    </button>
-                </div>
-
-                <!-- Input form -->
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mb-1.5">Dein Name</label>
-                        <input type="text" id="input-username" value="Professor Filou" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm font-medium" placeholder="Name eingeben...">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mb-1.5">Meeting Code / ID</label>
-                        <div class="flex space-x-2">
-                            <input type="text" id="input-room-code" value="filou-room-1" class="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-brand-500 font-mono text-sm font-semibold" placeholder="z.B. masterclass">
-                            <button onclick="generateRandomRoom()" class="px-4 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold rounded-xl transition">Neu</button>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase mb-1.5">Avatar Farbe</label>
-                        <div class="flex items-center space-x-3">
-                            <input type="color" id="input-color" value="#22c55e" class="w-10 h-10 rounded-xl border-0 cursor-pointer bg-transparent">
-                            <span class="text-xs text-slate-500">Wähle deine Profilfarbe für Initialen-Avatare</span>
-                        </div>
-                    </div>
-
-                    <button onclick="joinMeeting()" class="w-full mt-2 py-3.5 bg-slate-900 dark:bg-brand-600 text-white rounded-xl font-bold text-sm shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2">
-                        <span>Meeting betreten</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- VIEW 2: ACTIVE MEETING ROOM -->
-        <div id="view-meeting" class="hidden flex-1 flex flex-col lg:flex-row relative overflow-hidden h-full">
-            
-            <!-- Main Video Grid Area -->
-            <div class="flex-1 flex flex-col p-3 sm:p-4 lg:p-6 overflow-y-auto relative pb-24 lg:pb-20">
-                
-                <!-- Room Status Bar -->
-                <div class="flex items-center justify-between mb-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 shadow-sm">
-                    <div class="flex items-center space-x-3">
-                        <span class="font-bold text-sm" id="room-title-display">Meeting</span>
-                        <span class="text-xs text-slate-400">|</span>
-                        <span class="text-xs text-slate-500 dark:text-slate-400 flex items-center space-x-1">
-                            <svg class="w-3.5 h-3.5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                            <span id="participant-count">1</span> Teilnehmer
-                        </span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="copyInviteLink()" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold rounded-xl transition flex items-center space-x-1.5">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                            <span>Link kopieren</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Video Grid - Optimized for Mobile & Desktop -->
-                <div id="video-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 flex-1 auto-rows-fr">
-                    <!-- Dynamic Video Tiles injected via JS -->
-                </div>
-
-                <!-- Floating Reactions Layer -->
-                <div id="reactions-container" class="absolute inset-0 pointer-events-none overflow-hidden z-20"></div>
-            </div>
-
-            <!-- Sidebar / Chat / Participants Drawer (Desktop sidebar or Mobile slide-over) -->
-            <div id="sidebar-panel" class="fixed inset-y-0 right-0 z-40 w-full sm:w-80 bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 flex flex-col transform translate-x-full lg:translate-x-0 lg:static transition-transform duration-300 shadow-2xl lg:shadow-none">
-                <!-- Sidebar Header -->
-                <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                    <div class="flex space-x-2">
-                        <button onclick="switchTab('chat')" id="tab-btn-chat" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white dark:bg-brand-600 transition">Chat</button>
-                        <button onclick="switchTab('participants')" id="tab-btn-participants" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Teilnehmer (<span id="sidebar-count">1</span>)</button>
-                    </div>
-                    <button onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-
-                <!-- Tab Content: Chat -->
-                <div id="tab-content-chat" class="flex-1 flex flex-col overflow-hidden">
-                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-sm">
-                        <div class="text-center my-2">
-                            <span class="text-[11px] bg-slate-100 dark:bg-slate-800 text-slate-500 px-3 py-1 rounded-full">Meeting gestartet. Willkommen bei FilouMeet!</span>
-                        </div>
-                    </div>
-                    <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900">
-                        <form onsubmit="sendChatMessage(event)" class="flex space-x-2">
-                            <input type="text" id="chat-input" placeholder="Nachricht schreiben..." class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
-                            <button type="submit" class="px-4 py-2.5 bg-slate-900 dark:bg-brand-600 text-white rounded-xl text-xs font-bold hover:opacity-90 transition">Senden</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Tab Content: Participants List -->
-                <div id="tab-content-participants" class="hidden flex-1 flex flex-col overflow-y-auto p-4 space-y-3">
-                    <div id="participants-list" class="space-y-2">
-                        <!-- Dynamically populated -->
-                    </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight">FilouMeet</span>
+                    <span class="hidden sm:inline-block ml-2 text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">Pro</span>
                 </div>
             </div>
 
-            <!-- Bottom Control Bar (Fixed mobile-friendly floating pill) -->
-            <div class="absolute bottom-4 left-0 right-0 z-30 flex items-center justify-center px-4 pointer-events-none">
-                <div class="pointer-events-auto bg-slate-900/90 dark:bg-slate-900/95 backdrop-blur-md border border-slate-700/50 p-2.5 rounded-2xl shadow-2xl flex items-center space-x-2 sm:space-x-3">
-                    
-                    <!-- Mic Toggle -->
-                    <button onclick="toggleMeetingMic()" id="ctrl-mic" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition relative group" title="Mikrofon ein/aus">
-                        <svg id="icon-mic-on" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
-                        <svg id="icon-mic-off" class="w-5 h-5 text-rose-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2 2m0-2l-2 2"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 10a6 6 0 01-9.338 4.981L17 10.02v-.02z"></path></svg>
-                    </button>
-
-                    <!-- Camera Toggle -->
-                    <button onclick="toggleMeetingCam()" id="ctrl-cam" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition relative" title="Kamera ein/aus">
-                        <svg id="icon-cam-on" class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                        <svg id="icon-cam-off" class="w-5 h-5 text-rose-500 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-12.728 12.728M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                    </button>
-
-                    <div class="h-6 w-px bg-slate-700 mx-1"></div>
-
-                    <!-- Hand Raise Button -->
-                    <button onclick="toggleHandRaise()" id="ctrl-hand" class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition" title="Hand heben">
-                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path></svg>
-                    </button>
-
-                    <!-- Reactions Popover / Quick Trigger -->
-                    <div class="relative group">
-                        <button class="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition text-lg" title="Reaktionen">👍</button>
-                        <div class="absolute bottom-full mb-3 left-1/2 transform -translate-x-1/2 bg-slate-800 border border-slate-700 p-2 rounded-2xl shadow-xl hidden group-hover:flex space-x-2">
-                            <button onclick="sendReaction('👍')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">👍</button>
-                            <button onclick="sendReaction('❤️')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">❤️</button>
-                            <button onclick="sendReaction('👏')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">👏</button>
-                            <button onclick="sendReaction('🔥')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">🔥</button>
-                            <button onclick="sendReaction('😂')" class="p-2 hover:bg-slate-700 rounded-xl text-lg">😂</button>
-                        </div>
-                    </div>
-
-                    <!-- Chat / Drawer Toggle (Mobile) -->
-                    <button onclick="toggleSidebar()" class="lg:hidden p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition relative" title="Chat öffnen">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    </button>
-
-                    <div class="h-6 w-px bg-slate-700 mx-1"></div>
-
-                    <!-- Leave Room Button -->
-                    <button onclick="leaveMeeting()" class="px-4 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg transition flex items-center space-x-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-                        <span class="hidden sm:inline">Verlassen</span>
-                    </button>
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-900 transition text-slate-700 dark:text-slate-200" title="Dark Mode umschalten">
+                    <i id="darkModeIcon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+                <div id="headerUserInfo" class="hidden sm:flex items-center space-x-2 pl-2 border-l border-slate-200 dark:border-slate-800">
+                    <div id="headerUserAvatar" class="w-8 h-8 rounded-full bg-black dark:bg-white text-white dark:text-black font-semibold flex items-center justify-center text-xs">?</div>
+                    <span id="headerUserName" class="text-sm font-medium">Gast</span>
                 </div>
             </div>
+        </header>
 
-        </div>
-    </main>
+        <!-- Main Viewport Router Container -->
+        <main id="mainView" class="flex-1 flex flex-col relative">
+            <!-- Dynamically injected views -->
+        </main>
+        
+        <!-- Global Toast Notifications -->
+        <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    </div>
 
-    <!-- Application Logic -->
     <script>
-        // --- State Management ---
+        // App State
         const state = {
-            currentView: 'lobby',
-            username: 'Professor Filou',
-            roomCode: 'filou-room-1',
-            color: '#22c55e',
-            isCamOn: true,
-            isMicOn: true,
-            isHandRaised: false,
+            view: 'home', // 'home', 'lobby', 'meeting'
+            userName: localStorage.getItem('filou_username') || '',
+            roomCode: '',
+            isHost: false,
+            selectedColor: localStorage.getItem('filou_color') || 'black',
+            micEnabled: true,
+            camEnabled: true,
+            screenSharing: false,
+            handRaised: false,
+            chatMessages: [
+                { sender: 'System', text: 'Willkommen in der Konferenz! Sei respektvoll.', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+            ],
+            peers: new Map(), // peerId -> { name, color, stream }
             localStream: null,
             audioContext: null,
             analyser: null,
-            microphone: null,
-            audioLevelInterval: null,
-            participants: [],
-            chatMessages: []
+            speechInterval: null,
+            roomLocked: false
         };
 
-        // --- Router Implementation for Hash Navigation ---
-        const router = {
-            init() {
-                window.addEventListener('hashchange', () => this.handleRoute());
-                this.handleRoute();
-            },
-            handleRoute() {
-                const hash = window.location.hash.replace('#', '');
-                if (hash.startsWith('meeting=')) {
-                    const room = hash.split('=')[1];
-                    if (room) {
-                        document.getElementById('input-room-code').value = room;
-                        if (state.currentView !== 'meeting') {
-                            // Auto join if arriving via direct share link
-                            joinMeeting(true);
-                        }
-                    }
-                } else {
-                    if (state.currentView === 'meeting') {
-                        leaveMeeting(false);
-                    }
-                    this.showView('lobby');
-                }
-            },
-            showView(viewName) {
-                state.currentView = viewName;
-                const lobby = document.getElementById('view-lobby');
-                const meeting = document.getElementById('view-meeting');
-                const navInfo = document.getElementById('nav-meeting-info');
+        const AVATAR_COLORS = [
+            { name: 'black', class: 'bg-black dark:bg-white text-white dark:text-black' },
+            { name: 'slate', class: 'bg-slate-700 text-white' },
+            { name: 'blue', class: 'bg-blue-600 text-white' },
+            { name: 'indigo', class: 'bg-indigo-600 text-white' },
+            { name: 'purple', class: 'bg-purple-600 text-white' },
+            { name: 'rose', class: 'bg-rose-600 text-white' },
+            { name: 'emerald', class: 'bg-emerald-600 text-white' },
+            { name: 'amber', class: 'bg-amber-600 text-white' }
+        ];
 
-                if (viewName === 'lobby') {
-                    lobby.classList.remove('hidden');
-                    meeting.classList.add('hidden');
-                    navInfo.classList.add('hidden');
-                    startPreviewStream();
-                } else {
-                    lobby.classList.add('hidden');
-                    meeting.classList.remove('hidden');
-                    navInfo.classList.remove('hidden');
-                    document.getElementById('nav-room-code-display').textContent = state.roomCode;
-                    document.getElementById('room-title-display').textContent = `Raum: ${state.roomCode}`;
-                }
-            },
-            navigate(route, param = '') {
-                if (route === 'lobby') {
-                    window.location.hash = '';
-                } else if (route === 'meeting') {
-                    window.location.hash = `meeting=${param}`;
-                }
-            }
-        };
-
-        // --- Dark Mode ---
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.theme = 'light';
+        // Dark Mode Initialization
+        function initDarkMode() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('darkModeIcon').className = 'fa-solid fa-sun text-sm';
             } else {
-                html.classList.add('dark');
+                document.documentElement.classList.remove('dark');
+                document.getElementById('darkModeIcon').className = 'fa-solid fa-moon text-sm';
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                document.getElementById('darkModeIcon').className = 'fa-solid fa-moon text-sm';
+            } else {
+                document.documentElement.classList.add('dark');
                 localStorage.theme = 'dark';
+                document.getElementById('darkModeIcon').className = 'fa-solid fa-sun text-sm';
             }
         }
 
-        // --- Media Stream & Preview ---
-        async function startPreviewStream() {
-            try {
-                if (!state.localStream) {
-                    state.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgClass = type === 'error' ? 'bg-rose-600 text-white' : type === 'success' ? 'bg-emerald-600 text-white' : 'bg-black text-white dark:bg-white dark:text-black';
+            toast.className = `px-4 py-3 rounded-2xl shadow-xl pointer-events-auto transform translate-y-2 opacity-0 transition-all duration-300 flex items-center space-x-2 text-sm font-medium ${bgClass}`;
+            toast.innerHTML = `
+                <i class="fa-solid ${type === 'error' ? 'fa-circle-exclamation' : type === 'success' ? 'fa-circle-check' : 'fa-circle-info'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 50);
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Router
+        const router = {
+            navigate(viewName, params = {}) {
+                state.view = viewName;
+                if (params.roomCode) state.roomCode = params.roomCode;
+                
+                if (viewName === 'home') {
+                    window.location.hash = '#home';
+                    stopLocalMedia();
+                } else if (viewName === 'lobby') {
+                    window.location.hash = `#lobby-${state.roomCode || generateRoomCode()}`;
+                } else if (viewName === 'meeting') {
+                    window.location.hash = `#room-${state.roomCode}`;
                 }
-                const previewVideo = document.getElementById('preview-video');
-                previewVideo.srcObject = state.localStream;
-                previewVideo.style.display = 'block';
-                document.getElementById('preview-avatar-fallback').classList.add('hidden');
-                initAudioAnalyzer(state.localStream);
-            } catch (err) {
-                console.warn('Kamera/Mikrofon nicht verfügbar:', err);
-                document.getElementById('preview-video').style.display = 'none';
-                document.getElementById('preview-avatar-fallback').classList.remove('hidden');
-                // Set initial letter
-                const name = document.getElementById('input-username').value || 'User';
-                const circle = document.getElementById('preview-avatar-circle');
-                circle.textContent = name.charAt(0).toUpperCase();
-                circle.style.backgroundColor = document.getElementById('input-color').value;
+                renderView();
+            }
+        };
+
+        function generateRoomCode() {
+            const chars = 'abcdefghijkmnpqrstuvwxyz23456789';
+            let code = '';
+            for (let i = 0; i < 9; i++) {
+                if (i > 0 && i % 3 === 0) code += '-';
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function updateHeaderUser() {
+            const avatar = document.getElementById('headerUserAvatar');
+            const nameEl = document.getElementById('headerUserName');
+            if (state.userName) {
+                nameEl.textContent = state.userName;
+                avatar.textContent = state.userName.charAt(0).toUpperCase();
+                const colorObj = AVATAR_COLORS.find(c => c.name === state.selectedColor) || AVATAR_COLORS[0];
+                avatar.className = `w-8 h-8 rounded-full font-bold flex items-center justify-center text-xs ${colorObj.class}`;
             }
         }
 
-        function togglePreviewCam() {
-            state.isCamOn = !state.isCamOn;
-            if (state.localStream) {
-                const videoTracks = state.localStream.getVideoTracks();
-                videoTracks.forEach(track => track.enabled = state.isCamOn);
+        function renderView() {
+            const main = document.getElementById('mainView');
+            updateHeaderUser();
+            
+            if (state.view === 'home') {
+                main.innerHTML = renderHomeView();
+            } else if (state.view === 'lobby') {
+                main.innerHTML = renderLobbyView();
+                initLobbyPreview();
+            } else if (state.view === 'meeting') {
+                main.innerHTML = renderMeetingView();
+                initMeetingSession();
             }
-            const btn = document.getElementById('preview-btn-cam');
-            btn.classList.toggle('bg-rose-600', !state.isCamOn);
-            btn.classList.toggle('bg-slate-900', state.isCamOn);
+        }
+
+        function renderHomeView() {
+            return `
+                <div class="flex-1 flex flex-col items-center justify-center px-4 py-12 max-w-4xl mx-auto w-full text-center">
+                    <div class="w-20 h-20 rounded-3xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-3xl font-extrabold shadow-2xl mb-6">
+                        F
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                        Sichere Videokonferenzen für <span class="underline decoration-black dark:decoration-white decoration-4 underline-offset-8">Professor Filou</span>
+                    </h1>
+                    
+                    <p class="text-lg text-slate-600 dark:text-slate-400 max-w-xl mb-10">
+                        Sofort einsatzbereit im Browser. Keine Downloads, keine Registrierung, absolut sicher.
+                    </p>
+
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 rounded-3xl shadow-2xl w-full max-w-xl flex flex-col space-y-4">
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input id="homeRoomInput" type="text" placeholder="Raumcode eingeben (z.B. abc-def-ghi)" class="flex-1 px-4 py-3.5 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white font-medium text-center sm:text-left">
+                            <button onclick="joinRoomFromHome()" class="px-6 py-3.5 bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-semibold rounded-2xl shadow-xl transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-right-to-bracket"></i>
+                                <span>Beitreten</span>
+                            </button>
+                        </div>
+                        
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                            <span class="flex-shrink mx-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Oder</span>
+                            <div class="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+                        </div>
+
+                        <button onclick="createNewMeeting()" class="w-full py-4 bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-bold rounded-2xl shadow-2xl transition flex items-center justify-center space-x-3 text-lg">
+                            <i class="fa-solid fa-video"></i>
+                            <span>Neuen Raum erstellen</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createNewMeeting() {
+            const code = generateRoomCode();
+            state.isHost = true;
+            router.navigate('lobby', { roomCode: code });
+        }
+
+        function joinRoomFromHome() {
+            const input = document.getElementById('homeRoomInput');
+            let val = input.value.trim().toLowerCase();
+            if (!val) {
+                showToast('Bitte gib einen gültigen Raumcode ein.', 'error');
+                return;
+            }
+            if (val.includes('#room-')) val = val.split('#room-')[1];
+            if (val.includes('#lobby-')) val = val.split('#lobby-')[1];
+            state.isHost = false;
+            router.navigate('lobby', { roomCode: val });
+        }
+
+        function renderLobbyView() {
+            if (!state.userName) {
+                state.userName = 'FilouGast_' + Math.floor(Math.random() * 900 + 100);
+            }
+            return `
+                <div class="flex-1 flex items-center justify-center px-4 py-8 max-w-4xl mx-auto w-full">
+                    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-10 rounded-3xl shadow-2xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        
+                        <!-- Video Preview -->
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-inner flex items-center justify-center border border-slate-800">
+                                <video id="previewVideo" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
+                                <div id="previewAvatarFallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950">
+                                    <div id="lobbyBigAvatar" class="w-20 h-20 rounded-full font-bold text-3xl flex items-center justify-center shadow-lg">?</div>
+                                    <span class="text-slate-400 text-xs mt-2">Kamera aus</span>
+                                </div>
+                                <div class="absolute bottom-3 left-3 flex space-x-2">
+                                    <button onclick="togglePreviewMic()" id="lobbyMicBtn" class="p-2.5 rounded-2xl bg-black/80 hover:bg-black text-white backdrop-blur transition">
+                                        <i id="lobbyMicIcon" class="fa-solid fa-microphone text-sm"></i>
+                                    </button>
+                                    <button onclick="togglePreviewCam()" id="lobbyCamBtn" class="p-2.5 rounded-2xl bg-black/80 hover:bg-black text-white backdrop-blur transition">
+                                        <i id="lobbyCamIcon" class="fa-solid fa-video text-sm"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Configuration -->
+                        <div class="flex flex-col space-y-6">
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Lobby</span>
+                                <h2 class="text-2xl font-bold mt-1">Bereit fürs Meeting?</h2>
+                                <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">Raum: <span class="font-mono font-semibold">${state.roomCode}</span></p>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Dein Name</label>
+                                    <input id="lobbyNameInput" type="text" value="${state.userName}" oninput="onNameInput(this.value)" placeholder="Name eingeben" class="w-full px-4 py-3 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-300 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white font-medium">
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-2">Avatar Stil</label>
+                                    <div class="flex space-x-2">
+                                        ${AVATAR_COLORS.map(c => `
+                                            <button onclick="selectColor('${c.name}')" class="w-8 h-8 rounded-full ${c.class} transition transform hover:scale-110 ${state.selectedColor === c.name ? 'ring-4 ring-black dark:ring-white' : ''}"></button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 flex flex-col sm:flex-row gap-3">
+                                <button onclick="router.navigate('home')" class="px-5 py-3 rounded-2xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition text-center">
+                                    Abbrechen
+                                </button>
+                                <button onclick="enterMeeting()" class="flex-1 py-3.5 bg-black hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-black font-bold rounded-2xl shadow-2xl transition flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-right-to-bracket"></i>
+                                    <span>Beitreten</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        async function initLobbyPreview() {
+            updateLobbyAvatarDisplay();
+            try {
+                state.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                const videoEl = document.getElementById('previewVideo');
+                if (videoEl) {
+                    videoEl.srcObject = state.localStream;
+                    document.getElementById('previewAvatarFallback').style.display = 'none';
+                }
+            } catch (err) {
+                console.warn('Media warning:', err);
+                document.getElementById('previewAvatarFallback').style.display = 'flex';
+                const videoEl = document.getElementById('previewVideo');
+                if (videoEl) videoEl.style.display = 'none';
+                state.camEnabled = false;
+                state.micEnabled = false;
+                updateLobbyMediaButtons();
+            }
+        }
+
+        function onNameInput(val) {
+            state.userName = val.trim();
+            localStorage.setItem('filou_username', state.userName);
+            updateLobbyAvatarDisplay();
+        }
+
+        function selectColor(colorName) {
+            state.selectedColor = colorName;
+            localStorage.setItem('filou_color', colorName);
+            renderView();
+        }
+
+        function updateLobbyAvatarDisplay() {
+            const bigAv = document.getElementById('lobbyBigAvatar');
+            if (bigAv) {
+                const initial = state.userName ? state.userName.charAt(0).toUpperCase() : '?';
+                bigAv.textContent = initial;
+                const colorObj = AVATAR_COLORS.find(c => c.name === state.selectedColor) || AVATAR_COLORS[0];
+                bigAv.className = `w-20 h-20 rounded-full font-bold text-3xl flex items-center justify-center shadow-lg ${colorObj.class}`;
+            }
         }
 
         function togglePreviewMic() {
-            state.isMicOn = !state.isMicOn;
-            if (state.localStream) {
-                const audioTracks = state.localStream.getAudioTracks();
-                audioTracks.forEach(track => track.enabled = state.isMicOn);
-            }
-            const btn = document.getElementById('preview-btn-mic');
-            btn.classList.toggle('bg-rose-600', !state.isMicOn);
-            btn.classList.toggle('bg-slate-900', state.isMicOn);
-            const statusIcon = document.getElementById('preview-mic-status-icon');
-            statusIcon.classList.toggle('bg-rose-500', !state.isMicOn);
-            statusIcon.classList.toggle('bg-emerald-400', state.isMicOn);
-            document.getElementById('preview-mic-label').textContent = state.isMicOn ? 'Mikrofon aktiv' : 'Stummgeschaltet';
+            state.micEnabled = !state.micEnabled;
+            if (state.localStream) state.localStream.getAudioTracks().forEach(t => t.enabled = state.micEnabled);
+            updateLobbyMediaButtons();
         }
 
-        // --- Web Audio API Speaking Detection ---
-        function initAudioAnalyzer(stream) {
+        function togglePreviewCam() {
+            state.camEnabled = !state.camEnabled;
+            if (state.localStream) state.localStream.getVideoTracks().forEach(t => t.enabled = state.camEnabled);
+            updateLobbyMediaButtons();
+            const videoEl = document.getElementById('previewVideo');
+            const fallback = document.getElementById('previewAvatarFallback');
+            if (videoEl && fallback) {
+                if (state.camEnabled) {
+                    videoEl.style.display = 'block';
+                    fallback.style.display = 'none';
+                } else {
+                    videoEl.style.display = 'none';
+                    fallback.style.display = 'flex';
+                }
+            }
+        }
+
+        function updateLobbyMediaButtons() {
+            const micBtn = document.getElementById('lobbyMicBtn');
+            const micIcon = document.getElementById('lobbyMicIcon');
+            const camBtn = document.getElementById('lobbyCamBtn');
+            const camIcon = document.getElementById('lobbyCamIcon');
+            if (micBtn && micIcon) {
+                micBtn.className = `p-2.5 rounded-2xl transition ${state.micEnabled ? 'bg-black/80 text-white' : 'bg-rose-600 text-white'}`;
+                micIcon.className = `fa-solid ${state.micEnabled ? 'fa-microphone' : 'fa-microphone-slash'} text-sm`;
+            }
+            if (camBtn && camIcon) {
+                camBtn.className = `p-2.5 rounded-2xl transition ${state.camEnabled ? 'bg-black/80 text-white' : 'bg-rose-600 text-white'}`;
+                camIcon.className = `fa-solid ${state.camEnabled ? 'fa-video' : 'fa-video-slash'} text-sm`;
+            }
+        }
+
+        function stopLocalMedia() {
+            if (state.localStream) {
+                state.localStream.getTracks().forEach(t => t.stop());
+                state.localStream = null;
+            }
+            if (state.speechInterval) {
+                clearInterval(state.speechInterval);
+                state.speechInterval = null;
+            }
+        }
+
+        function enterMeeting() {
+            if (!state.userName) state.userName = 'Gast';
+            router.navigate('meeting');
+        }
+
+        function renderMeetingView() {
+            return `
+                <div class="flex-1 flex flex-col h-[calc(100vh-65px)] relative overflow-hidden bg-slate-950">
+                    
+                    <!-- Top Bar Info -->
+                    <div class="absolute top-4 left-4 z-20 flex items-center space-x-2 bg-black/80 dark:bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-slate-800 text-xs font-medium text-slate-300 shadow-2xl">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="font-mono font-bold text-white">${state.roomCode}</span>
+                        <button onclick="copyRoomLink()" class="ml-2 px-2 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-white transition" title="Link kopieren">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
+
+                    <!-- Video Grid Container (Mobile optimized: vertical stack on mobile, grid on desktop) -->
+                    <div id="videoGridContainer" class="flex-1 p-3 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-center justify-center overflow-y-auto">
+                        <!-- Zero fake participants enforced: Only local user initially -->
+                        <div id="tile-local" class="relative bg-black rounded-3xl overflow-hidden aspect-video shadow-2xl border border-slate-800 flex items-center justify-center group transition-all duration-300">
+                            <video id="localVideo" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100 ${state.camEnabled ? '' : 'hidden'}"></video>
+                            
+                            <div id="localAvatarFallback" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950 ${state.camEnabled ? 'hidden' : ''}">
+                                <div id="localBigAvatar" class="w-24 h-24 rounded-full font-bold text-4xl flex items-center justify-center shadow-2xl ${AVATAR_COLORS.find(c => c.name === state.selectedColor)?.class || 'bg-black text-white'}">
+                                    ${state.userName.charAt(0).toUpperCase()}
+                                </div>
+                            </div>
+
+                            <div class="absolute bottom-3 left-3 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-2xl flex items-center space-x-2 border border-slate-800/50">
+                                <span id="localHandBadge" class="hidden text-amber-400 text-sm"><i class="fa-solid fa-hand"></i></span>
+                                <span class="text-xs font-semibold text-white">${state.userName} (Du)</span>
+                                <span id="localMicIndicator" class="${state.micEnabled ? 'text-emerald-400' : 'text-rose-500'} text-xs">
+                                    <i class="fa-solid ${state.micEnabled ? 'fa-microphone' : 'fa-microphone-slash'}"></i>
+                                </span>
+                            </div>
+
+                            <div id="localAudioWave" class="absolute top-3 right-3 hidden">
+                                <span class="flex h-3 w-3 relative">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Reactions Layer -->
+                    <div id="floatingReactionsLayer" class="absolute inset-0 pointer-events-none overflow-hidden z-30"></div>
+
+                    <!-- Collapsible Side Drawer (Chat / Participants) -->
+                    <div id="sideDrawer" class="absolute top-0 right-0 h-full w-full sm:w-96 bg-black/95 dark:bg-slate-950/95 backdrop-blur-2xl border-l border-slate-800 shadow-2xl z-40 transform translate-x-full transition-transform duration-300 flex flex-col">
+                        <div class="p-4 border-b border-slate-800 flex items-center justify-between">
+                            <h3 id="drawerTitle" class="font-bold text-base text-white">Chat</h3>
+                            <button onclick="closeSideDrawer()" class="p-2 rounded-2xl hover:bg-slate-800 text-slate-400 hover:text-white transition">
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                        </div>
+                        <div id="drawerBody" class="flex-1 overflow-y-auto p-4 flex flex-col space-y-4"></div>
+                    </div>
+
+                    <!-- Bottom Control Toolbar (Sleek Deep Black Buttons) -->
+                    <div class="bg-black/90 dark:bg-slate-950/90 backdrop-blur-md border-t border-slate-800 py-3 px-4 flex items-center justify-between z-20">
+                        <div class="hidden md:flex items-center space-x-2 text-xs text-slate-400">
+                            <i class="fa-solid fa-shield-halved text-white"></i>
+                            <span>Verschlüsselt</span>
+                        </div>
+
+                        <!-- Center Action Buttons -->
+                        <div class="flex items-center space-x-2 sm:space-x-3 mx-auto">
+                            <button onclick="toggleMeetingMic()" id="meetingMicBtn" class="p-3 sm:p-3.5 rounded-2xl ${state.micEnabled ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-rose-600 text-white'} shadow-xl transition" title="Mikrofon">
+                                <i id="meetingMicIcon" class="fa-solid ${state.micEnabled ? 'fa-microphone' : 'fa-microphone-slash'} text-base"></i>
+                            </button>
+
+                            <button onclick="toggleMeetingCam()" id="meetingCamBtn" class="p-3 sm:p-3.5 rounded-2xl ${state.camEnabled ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-rose-600 text-white'} shadow-xl transition" title="Kamera">
+                                <i id="meetingCamIcon" class="fa-solid ${state.camEnabled ? 'fa-video' : 'fa-video-slash'} text-base"></i>
+                            </button>
+
+                            <button onclick="toggleScreenShare()" id="meetingScreenBtn" class="p-3 sm:p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white shadow-xl transition hidden sm:flex" title="Bildschirm teilen">
+                                <i class="fa-solid fa-desktop text-base"></i>
+                            </button>
+
+                            <button onclick="toggleHandRaise()" id="meetingHandBtn" class="p-3 sm:p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white shadow-xl transition" title="Hand heben">
+                                <i class="fa-solid fa-hand text-base"></i>
+                            </button>
+
+                            <button onclick="openReactionMenu()" class="p-3 sm:p-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white shadow-xl transition" title="Reaktionen">
+                                <i class="fa-solid fa-face-smile text-base"></i>
+                            </button>
+
+                            <button onclick="leaveMeeting()" class="px-5 py-3.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl shadow-xl transition flex items-center space-x-2">
+                                <i class="fa-solid fa-phone-slash"></i>
+                                <span class="hidden sm:inline">Verlassen</span>
+                            </button>
+                        </div>
+
+                        <!-- Right Drawer toggles -->
+                        <div class="flex items-center space-x-2">
+                            <button onclick="openParticipantsDrawer()" class="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition relative" title="Teilnehmer">
+                                <i class="fa-solid fa-users"></i>
+                                <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white text-black text-xs font-bold flex items-center justify-center">1</span>
+                            </button>
+                            <button onclick="openChatDrawer()" class="p-3 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white transition relative" title="Chat">
+                                <i class="fa-solid fa-comment-dots"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function initMeetingSession() {
+            if (!state.localStream) {
+                try {
+                    state.localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                } catch (e) {
+                    console.warn('Media fallback active:', e);
+                    state.camEnabled = false;
+                    state.micEnabled = false;
+                }
+            }
+            const videoEl = document.getElementById('localVideo');
+            if (videoEl && state.localStream) videoEl.srcObject = state.localStream;
+            updateMeetingMediaButtons();
+            initWebAudioAnalyzer();
+        }
+
+        function initWebAudioAnalyzer() {
+            if (!state.localStream) return;
             try {
-                if (!window.AudioContext && !window.webkitAudioContext) return;
-                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                state.audioContext = new AudioContext();
                 state.analyser = state.audioContext.createAnalyser();
-                state.microphone = state.audioContext.createMediaStreamSource(stream);
-                state.microphone.connect(state.analyser);
-                state.analyser.fftSize = 256;
+                const source = state.audioContext.createMediaStreamSource(state.localStream);
+                source.connect(state.analyser);
+                state.analyser.fftSize = 512;
                 const bufferLength = state.analyser.frequencyBinCount;
                 const dataArray = new Uint8Array(bufferLength);
 
-                if (state.audioLevelInterval) clearInterval(state.audioLevelInterval);
-                state.audioLevelInterval = setInterval(() => {
-                    if (!state.analyser || !state.isMicOn) return;
+                state.speechInterval = setInterval(() => {
+                    if (!state.micEnabled) return;
                     state.analyser.getByteFrequencyData(dataArray);
                     let sum = 0;
-                    for (let i = 0; i < bufferLength; i++) {
-                        sum += dataArray[i];
-                    }
+                    for (let i = 0; i < bufferLength; i++) sum += dataArray[i];
                     let average = sum / bufferLength;
-                    const localTile = document.getElementById('tile-local');
-                    if (localTile) {
-                        if (average > 25) {
-                            localTile.classList.add('speaking-glow', 'border-brand-500');
-                        } else {
-                            localTile.classList.remove('speaking-glow', 'border-brand-500');
-                        }
+                    const tile = document.getElementById('tile-local');
+                    const wave = document.getElementById('localAudioWave');
+                    if (average > 18) {
+                        if (tile) tile.classList.add('active-speaker-ring');
+                        if (wave) wave.style.display = 'block';
+                    } else {
+                        if (tile) tile.classList.remove('active-speaker-ring');
+                        if (wave) wave.style.display = 'none';
                     }
                 }, 200);
             } catch (e) {
-                console.log('Audio analyzer error:', e);
+                console.warn('Web Audio error:', e);
             }
         }
 
-        function generateRandomRoom() {
-            const code = 'filou-' + Math.random().toString(36.substring(2, 8));
-            document.getElementById('input-room-code').value = code;
-        }
-
-        // --- Join & Leave Meeting ---
-        async function joinMeeting(fromRoute = false) {
-            state.username = document.getElementById('input-username').value.trim() || 'Gast';
-            state.roomCode = document.getElementById('input-room-code').value.trim() || 'meeting-1';
-            state.color = document.getElementById('input-color').value || '#22c55e';
-
-            if (!fromRoute) {
-                router.navigate('meeting', state.roomCode);
-            }
-
-            router.showView('meeting');
-
-            // Initialize local participant (ZERO FAKE PEOPLE - only real user)
-            state.participants = [{
-                id: 'local-user',
-                name: state.username,
-                color: state.color,
-                isCamOn: state.isCamOn,
-                isMicOn: state.isMicOn,
-                isHandRaised: false,
-                isLocal: true
-            }];
-
-            renderMeetingUI();
-        }
-
-        function leaveMeeting(updateRouter = true) {
-            if (state.localStream) {
-                state.localStream.getTracks().forEach(track => track.stop());
-                state.localStream = null;
-            }
-            if (state.audioLevelInterval) clearInterval(state.audioLevelInterval);
-            if (state.audioContext) state.audioContext.close();
-
-            if (updateRouter) {
-                router.navigate('lobby');
-            }
-        }
-
-        // --- Active Meeting Controls ---
         function toggleMeetingMic() {
-            state.isMicOn = !state.isMicOn;
-            if (state.localStream) {
-                state.localStream.getAudioTracks().forEach(track => track.enabled = state.isMicOn);
-            }
-            const p = state.participants.find(x => x.isLocal);
-            if (p) p.isMicOn = state.isMicOn;
-
-            // Update UI buttons
-            document.getElementById('icon-mic-on').classList.toggle('hidden', !state.isMicOn);
-            document.getElementById('icon-mic-off').classList.toggle('hidden', state.isMicOn);
-            renderMeetingUI();
+            state.micEnabled = !state.micEnabled;
+            if (state.localStream) state.localStream.getAudioTracks().forEach(t => t.enabled = state.micEnabled);
+            updateMeetingMediaButtons();
+            showToast(state.micEnabled ? 'Mikrofon an' : 'Mikrofon stumm');
         }
 
         function toggleMeetingCam() {
-            state.isCamOn = !state.isCamOn;
-            if (state.localStream) {
-                state.localStream.getVideoTracks().forEach(track => track.enabled = state.isCamOn);
+            state.camEnabled = !state.camEnabled;
+            if (state.localStream) state.localStream.getVideoTracks().forEach(t => t.enabled = state.camEnabled);
+            updateMeetingMediaButtons();
+            const videoEl = document.getElementById('localVideo');
+            const fallback = document.getElementById('localAvatarFallback');
+            if (videoEl && fallback) {
+                if (state.camEnabled) {
+                    videoEl.classList.remove('hidden');
+                    fallback.classList.add('hidden');
+                } else {
+                    videoEl.classList.add('hidden');
+                    fallback.classList.remove('hidden');
+                }
             }
-            const p = state.participants.find(x => x.isLocal);
-            if (p) p.isCamOn = state.isCamOn;
+            showToast(state.camEnabled ? 'Kamera an' : 'Kamera aus');
+        }
 
-            document.getElementById('icon-cam-on').classList.toggle('hidden', !state.isCamOn);
-            document.getElementById('icon-cam-off').classList.toggle('hidden', state.isCamOn);
-            renderMeetingUI();
+        function updateMeetingMediaButtons() {
+            const micBtn = document.getElementById('meetingMicBtn');
+            const micIcon = document.getElementById('meetingMicIcon');
+            const camBtn = document.getElementById('meetingCamBtn');
+            const camIcon = document.getElementById('meetingCamIcon');
+            const indicator = document.getElementById('localMicIndicator');
+
+            if (micBtn && micIcon) {
+                micBtn.className = `p-3 sm:p-3.5 rounded-2xl shadow-xl transition ${state.micEnabled ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-rose-600 text-white'}`;
+                micIcon.className = `fa-solid ${state.micEnabled ? 'fa-microphone' : 'fa-microphone-slash'} text-base`;
+            }
+            if (camBtn && camIcon) {
+                camBtn.className = `p-3 sm:p-3.5 rounded-2xl shadow-xl transition ${state.camEnabled ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-rose-600 text-white'}`;
+                camIcon.className = `fa-solid ${state.camEnabled ? 'fa-video' : 'fa-video-slash'} text-base`;
+            }
+            if (indicator) {
+                indicator.className = `${state.micEnabled ? 'text-emerald-400' : 'text-rose-500'} text-xs`;
+                indicator.innerHTML = `<i class="fa-solid ${state.micEnabled ? 'fa-microphone' : 'fa-microphone-slash'}"></i>`;
+            }
         }
 
         function toggleHandRaise() {
-            state.isHandRaised = !state.isHandRaised;
-            const p = state.participants.find(x => x.isLocal);
-            if (p) p.isHandRaised = state.isHandRaised;
-            const btn = document.getElementById('ctrl-hand');
-            btn.classList.toggle('bg-amber-600', state.isHandRaised);
-            btn.classList.toggle('bg-slate-800', !state.isHandRaised);
-            renderMeetingUI();
+            state.handRaised = !state.handRaised;
+            const badge = document.getElementById('localHandBadge');
+            const btn = document.getElementById('meetingHandBtn');
+            if (badge) badge.classList.toggle('hidden', !state.handRaised);
+            if (btn) btn.className = `p-3 sm:p-3.5 rounded-2xl shadow-xl transition ${state.handRaised ? 'bg-amber-500 text-black font-bold' : 'bg-slate-800 hover:bg-slate-700 text-white'}`;
+            showToast(state.handRaised ? 'Hand gehoben' : 'Hand gesenkt');
         }
 
-        function sendReaction(emoji) {
-            const container = document.getElementById('reactions-container');
-            const el = document.createElement('div');
-            el.className = 'absolute bottom-12 left-1/2 transform -translate-x-1/2 text-4xl floating-reaction pointer-events-none';
-            el.style.left = `${Math.random() * 80 + 10}%`;
-            el.textContent = emoji;
-            container.appendChild(el);
-            setTimeout(() => el.remove(), 2200);
-        }
-
-        function copyInviteLink() {
-            const url = window.location.href;
-            document.execCommand('copy');
-            // Fallback modern copy
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url);
-            }
-            showNotification('Meeting-Link in Zwischenablage kopiert!');
-        }
-
-        function showNotification(msg) {
-            const div = document.createElement('div');
-            div.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-4 py-2 rounded-2xl shadow-xl text-xs font-bold z-50 transition animate-bounce';
-            div.textContent = msg;
-            document.body.appendChild(div);
-            setTimeout(() => div.remove(), 2500);
-        }
-
-        // --- Sidebar & Mobile Drawer Toggle ---
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar-panel');
-            sidebar.classList.toggle('translate-x-full');
-        }
-
-        function switchTab(tab) {
-            const chatBtn = document.getElementById('tab-btn-chat');
-            const partBtn = document.getElementById('tab-btn-participants');
-            const chatContent = document.getElementById('tab-content-chat');
-            const partContent = document.getElementById('tab-content-participants');
-
-            if (tab === 'chat') {
-                chatBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white dark:bg-brand-600 transition';
-                partBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition';
-                chatContent.classList.remove('hidden');
-                partContent.classList.add('hidden');
-            } else {
-                partBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white dark:bg-brand-600 transition';
-                chatBtn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition';
-                partContent.classList.remove('hidden');
-                chatContent.classList.add('hidden');
-            }
-        }
-
-        function sendChatMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('chat-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            state.chatMessages.push({ sender: state.username, text, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) });
-            input.value = '';
-            renderChatMessages();
-        }
-
-        function renderChatMessages() {
-            const container = document.getElementById('chat-messages');
-            container.innerHTML = state.chatMessages.map(m => `
-                <div class="flex flex-col">
-                    <div class="flex items-center space-x-1.5 mb-0.5">
-                        <span class="font-bold text-[11px] text-slate-700 dark:text-slate-300">${m.sender}</span>
-                        <span class="text-[9px] text-slate-400">${m.time}</span>
-                    </div>
-                    <div class="bg-slate-100 dark:bg-slate-800/80 p-2.5 rounded-2xl text-xs text-slate-800 dark:text-slate-200">
-                        ${m.text}
-                    </div>
-                </div>
-            `).join('');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // --- Render UI (Grid & Participants) ---
-        function renderMeetingUI() {
-            const grid = document.getElementById('video-grid');
-            document.getElementById('participant-count').textContent = state.participants.length;
-            document.getElementById('sidebar-count').textContent = state.participants.length;
-
-            // Render Video Grid Tiles
-            grid.innerHTML = state.participants.map(p => {
-                const initial = p.name.charAt(0).toUpperCase();
-                return `
-                    <div id="${p.isLocal ? 'tile-local' : 'tile-' + p.id}" class="relative bg-slate-900 rounded-3xl overflow-hidden aspect-video sm:aspect-auto sm:h-full flex items-center justify-center border-2 border-transparent shadow-lg transition-all">
-                        ${p.isLocal && state.localStream && p.isCamOn ? `
-                            <video autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100" id="local-video-element"></video>
-                        ` : `
-                            <div class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900">
-                                <div class="w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold uppercase text-white shadow-xl mb-2" style="background-color: ${p.color};">
-                                    ${initial}
-                                </div>
-                                <span class="text-xs text-slate-400 font-medium">${p.name} (Kamera aus)</span>
-                            </div>
-                        `}
-
-                        <!-- Participant Label & Hand Raise Badge -->
-                        <div class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center space-x-2 text-white text-xs z-10">
-                            <span class="w-2 h-2 rounded-full ${p.isMicOn ? 'bg-emerald-400' : 'bg-rose-500'}"></span>
-                            <span class="font-semibold">${p.name} ${p.isLocal ? '(Du)' : ''}</span>
-                            ${p.isHandRaised ? '<span class="text-amber-400 ml-1" title="Hand gehoben">✋</span>' : ''}
-                        </div>
-
-                        <!-- Muted Audio or Cam Off Indicators -->
-                        <div class="absolute top-3 right-3 flex space-x-1.5 z-10">
-                            ${!p.isMicOn ? '<div class="w-7 h-7 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-rose-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2 2m0-2l-2 2"></path></svg></div>' : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            // Bind local video stream if active
-            if (state.localStream) {
-                const localVideoEl = document.getElementById('local-video-element');
-                if (localVideoEl && localVideoEl.srcObject !== state.localStream) {
-                    localVideoEl.srcObject = state.localStream;
+        async function toggleScreenShare() {
+            try {
+                if (!state.screenSharing) {
+                    const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                    const videoEl = document.getElementById('localVideo');
+                    if (videoEl) videoEl.srcObject = screenStream;
+                    screenStream.getVideoTracks()[0].onended = () => stopScreenShare();
+                    state.screenSharing = true;
+                    showToast('Bildschirmfreigabe aktiv', 'success');
+                } else {
+                    stopScreenShare();
                 }
+            } catch (err) {
+                console.warn('Screen share cancelled:', err);
             }
-
-            // Render Participants List in Sidebar
-            const partList = document.getElementById('participants-list');
-            partList.innerHTML = state.participants.map(p => `
-                <div class="flex items-center justify-between p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style="background-color: ${p.color};">
-                            ${p.name.charAt(0).toUpperCase()}
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold">${p.name} ${p.isLocal ? '(Du)' : ''}</p>
-                            <p class="text-[10px] text-slate-400">${p.isMicOn ? 'Mikrofon aktiv' : 'Stumm'}</p>
-                        </div>
-                    </div>
-                    ${p.isHandRaised ? '<span class="text-amber-400 text-sm">✋</span>' : ''}
-                </div>
-            `).join('');
         }
 
-        // --- Run on Load ---
-        window.onload = function() {
-            router.init();
-            startPreviewStream();
-        };
+        function stopScreenShare() {
+            state.screenSharing = false;
+            if (state.localStream) {
+                const videoEl = document.getElementById('localVideo');
+                if (videoEl) videoEl.srcObject = state.localStream;
+            }
+            showToast('Bildschirmfreigabe beendet');
+        }
+
+        function openReactionMenu() {
+            const emojis = ['👍', '❤️', '👏', '🔥', '🎉', '💡'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            const layer = document.getElementById('floatingReactionsLayer');
+            if (!layer) return;
+            const el = document.createElement('div');
+            el.className = 'absolute bottom-20 left-1/2 transform -translate-x-1/2 text-4xl floating-emoji';
+            el.textContent = randomEmoji;
+            layer.appendChild(el);
+            setTimeout(() => el.remove(), 2500);
+        }
+
+        function copyRoomLink() {
+            const url = window.location.href;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(() => showToast('Link kopiert!', 'success'));
+            } else {
+                const dummy = document.createElement('textarea');
+                document.body.appendChild(dummy);
+                dummy.value = url;
+                dummy.select();
+                document.execCommand('copy');
+                document.body.removeChild(dummy);
+                showToast('Link kopiert!', 'success');
+            }
+        }
+
+        function openChatDrawer() {
+            const drawer = document.getElementById('sideDrawer');
+            const title = document.getElementById('drawerTitle');
+            const body = document.getElementById('drawerBody');
+            title.textContent = 'Konferenz-Chat';
+            body.innerHTML = `
+                <div class="flex-1 overflow-y-auto space-y-3 pr-1" id="chatMessagesList">
+                    ${state.chatMessages.map(m => `
+                        <div class="p-3 rounded-2xl bg-slate-900 border border-slate-800">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-xs text-slate-300">${m.sender}</span>
+                                <span class="text-[10px] text-slate-500">${m.time}</span>
+                            </div>
+                            <p class="text-sm text-slate-100">${m.text}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="pt-3 border-t border-slate-800 flex space-x-2">
+                    <input id="chatInputText" type="text" placeholder="Nachricht..." onkeydown="if(event.key==='Enter') sendChatMessage()" class="flex-1 px-3.5 py-2.5 rounded-2xl bg-slate-900 border border-slate-800 text-sm text-white focus:outline-none focus:ring-2 focus:ring-white">
+                    <button onclick="sendChatMessage()" class="px-4 py-2.5 bg-white text-black font-semibold rounded-2xl text-sm transition">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            `;
+            drawer.classList.remove('translate-x-full');
+            const list = document.getElementById('chatMessagesList');
+            if (list) list.scrollTop = list.scrollHeight;
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInputText');
+            if (!input || !input.value.trim()) return;
+            const text = input.value.trim();
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            state.chatMessages.push({ sender: state.userName + ' (Du)', text, time });
+            input.value = '';
+            openChatDrawer();
+        }
+
+        function openParticipantsDrawer() {
+            const drawer = document.getElementById('sideDrawer');
+            const title = document.getElementById('drawerTitle');
+            const body = document.getElementById('drawerBody');
+            title.textContent = 'Teilnehmer (1)';
+            body.innerHTML = `
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-900 border border-slate-800">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-full bg-white text-black font-bold text-xs flex items-center justify-center">${state.userName.charAt(0).toUpperCase()}</div>
+                            <span class="text-sm font-medium text-white">${state.userName} (Du)</span>
+                        </div>
+                        <span class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-medium">Host</span>
+                    </div>
+                </div>
+            `;
+            drawer.classList.remove('translate-x-full');
+        }
+
+        function closeSideDrawer() {
+            const drawer = document.getElementById('sideDrawer');
+            if (drawer) drawer.classList.add('translate-x-full');
+        }
+
+        function leaveMeeting() {
+            stopLocalMedia();
+            router.navigate('home');
+            showToast('Konferenz verlassen.');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initDarkMode();
+            const hash = window.location.hash;
+            if (hash.startsWith('#lobby-')) {
+                router.navigate('lobby', { roomCode: hash.replace('#lobby-', '') });
+            } else if (hash.startsWith('#room-')) {
+                router.navigate('lobby', { roomCode: hash.replace('#room-', '') });
+            } else {
+                router.navigate('home');
+            }
+        });
     </script>
 </body>
 </html>

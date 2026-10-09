@@ -16,8 +16,7 @@
             card: '#1a1b1e',
             border: '#2a2b2e',
             text: '#e8eaed',
-            muted: '#9aa0a6',
-            accent: '#8ab4f8'
+            muted: '#9aa0a6'
           }
         },
         boxShadow: {
@@ -46,7 +45,28 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  body { font-family: 'Inter', system-ui, sans-serif; background: #0f0f10; }
+  :root {
+    --accent: #8ab4f8;
+    --accent-hover: #aecbfa;
+    --bg: #0f0f10;
+    --card: #1a1b1e;
+    --border: #2a2b2e;
+    --text: #e8eaed;
+    --muted: #9aa0a6;
+  }
+  body.light {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #dadce0;
+    --text: #202124;
+    --muted: #5f6368;
+  }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s, color 0.3s;
+  }
   .speak { box-shadow: 0 0 0 3px #34a853 !important; }
   @keyframes floatUp {
     0% { transform: translateY(0) scale(0.8); opacity: 1; }
@@ -87,44 +107,66 @@
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255,255,255,0.08);
   }
+  body.light .tile-label {
+    background: rgba(32,33,36,0.75);
+  }
   .tile {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #3c4043; border-radius: 4px; }
+  body.light ::-webkit-scrollbar-thumb { background: #9aa0a6; }
+
+  /* Settings Panel */
+  #settingsPanel {
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  #settingsPanel.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px) scale(0.96);
+  }
 </style>
 </head>
-<body class="h-full text-[#e8eaed] overflow-hidden">
+<body class="h-full overflow-hidden">
 
 <!-- ==================== HOME ==================== -->
 <section id="home" class="hidden h-full flex flex-col">
-  <header class="h-16 px-6 flex items-center justify-between border-b border-[#2a2b2e]">
+  <header class="h-16 px-6 flex items-center justify-between border-b" style="border-color: var(--border)">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#8ab4f8] to-[#1a73e8] text-white flex items-center justify-center font-bold text-lg shadow-lg">F</div>
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold text-lg shadow-lg text-white" style="background: linear-gradient(135deg, var(--accent), #1a73e8)">F</div>
       <span class="text-xl font-semibold tracking-tight">FilouMeet</span>
     </div>
+    <button onclick="toggleSettings()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition" title="Einstellungen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
   </header>
   <main class="flex-1 flex items-center justify-center px-4">
     <div class="w-full max-w-[460px] text-center animate-fade-up">
       <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight mb-3">Videokonferenzen</h1>
-      <p class="text-[#9aa0a6] text-lg mb-10">Sicher · Direkt im Browser · Bis 8 Personen</p>
-      <div class="bg-[#1a1b1e] rounded-3xl p-8 border border-[#2a2b2e] shadow-meet-lg">
+      <p class="text-lg mb-10" style="color: var(--muted)">Sicher · Direkt im Browser · Bis 8 Personen</p>
+      <div class="rounded-3xl p-8 border shadow-meet-lg" style="background: var(--card); border-color: var(--border)">
         <div class="flex flex-col sm:flex-row gap-3 mb-6">
           <input id="joinInput" type="text" placeholder="Code oder Link eingeben" 
-            class="flex-1 h-12 px-5 rounded-full bg-[#0f0f10] border border-[#2a2b2e] focus:outline-none focus:ring-2 focus:ring-[#8ab4f8]/50 text-center sm:text-left placeholder:text-[#5f6368]"
+            class="flex-1 h-12 px-5 rounded-full border focus:outline-none focus:ring-2 text-center sm:text-left"
+            style="background: var(--bg); border-color: var(--border); color: var(--text)"
             onkeydown="if(event.key==='Enter')joinFromHome()">
-          <button onclick="joinFromHome()" class="h-12 px-6 rounded-full bg-[#8ab4f8] hover:bg-[#aecbfa] text-[#0f0f10] font-semibold transition">
+          <button onclick="joinFromHome()" class="h-12 px-6 rounded-full font-semibold transition text-[#0f0f10]" style="background: var(--accent)">
             Beitreten
           </button>
         </div>
         <div class="relative flex items-center gap-4 mb-6">
-          <div class="flex-1 h-px bg-[#2a2b2e]"></div>
-          <span class="text-sm text-[#5f6368]">oder</span>
-          <div class="flex-1 h-px bg-[#2a2b2e]"></div>
+          <div class="flex-1 h-px" style="background: var(--border)"></div>
+          <span class="text-sm" style="color: var(--muted)">oder</span>
+          <div class="flex-1 h-px" style="background: var(--border)"></div>
         </div>
-        <button onclick="newRoom()" class="w-full h-14 rounded-full bg-[#0f0f10] border border-[#2a2b2e] hover:bg-[#252628] font-medium transition flex items-center justify-center gap-3">
-          <i class="fa-solid fa-video text-[#8ab4f8]"></i>
+        <button onclick="newRoom()" class="w-full h-14 rounded-full border font-medium transition flex items-center justify-center gap-3"
+          style="background: var(--bg); border-color: var(--border)">
+          <i class="fa-solid fa-video" style="color: var(--accent)"></i>
           Neues Meeting starten
         </button>
       </div>
@@ -134,15 +176,21 @@
 
 <!-- ==================== LOBBY ==================== -->
 <section id="lobby" class="hidden h-full flex flex-col">
-  <header class="h-16 px-6 flex items-center justify-between border-b border-[#2a2b2e]">
+  <header class="h-16 px-6 flex items-center justify-between border-b" style="border-color: var(--border)">
     <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#8ab4f8] to-[#1a73e8] text-white flex items-center justify-center font-bold shadow-lg">F</div>
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center font-bold shadow-lg text-white" style="background: linear-gradient(135deg, var(--accent), #1a73e8)">F</div>
       <span class="font-semibold">FilouMeet</span>
     </div>
+    <button onclick="toggleSettings()" class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition" title="Einstellungen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
   </header>
   <main class="flex-1 flex items-center justify-center px-4 py-8">
     <div class="w-full max-w-4xl grid md:grid-cols-2 gap-10 items-center">
-      <div class="relative aspect-video bg-[#1a1b1e] rounded-2xl overflow-hidden shadow-meet-lg border border-[#2a2b2e]">
+      <div class="relative aspect-video rounded-2xl overflow-hidden shadow-meet-lg border" style="background: var(--card); border-color: var(--border)">
         <video id="prev" autoplay playsinline muted class="w-full h-full object-cover" style="transform:scaleX(-1)"></video>
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
           <button onclick="tog('audio')" class="b-mic control-btn bg-[#3c4043]/80 hover:bg-[#5f6368] text-white"><i></i></button>
@@ -152,17 +200,19 @@
       <div class="space-y-6 animate-fade-up">
         <div>
           <h2 class="text-2xl font-semibold mb-1">Bereit zum Beitreten?</h2>
-          <p class="text-[#9aa0a6] text-sm">Raum: <span id="lobRoom" class="font-mono font-medium text-[#8ab4f8]"></span></p>
+          <p class="text-sm" style="color: var(--muted)">Raum: <span id="lobRoom" class="font-mono font-medium" style="color: var(--accent)"></span></p>
         </div>
         <div>
-          <label class="block text-sm font-medium text-[#9aa0a6] mb-2">Dein Name</label>
+          <label class="block text-sm font-medium mb-2" style="color: var(--muted)">Dein Name</label>
           <input id="lobName" maxlength="24" placeholder="Name eingeben" 
-            class="w-full h-12 px-4 rounded-full bg-[#0f0f10] border border-[#2a2b2e] focus:outline-none focus:ring-2 focus:ring-[#8ab4f8]/50"
+            class="w-full h-12 px-4 rounded-full border focus:outline-none focus:ring-2"
+            style="background: var(--bg); border-color: var(--border); color: var(--text)"
             onkeydown="if(event.key==='Enter')join()">
         </div>
         <div class="flex gap-3 pt-2">
-          <a href="#home" class="h-12 px-6 rounded-full border border-[#2a2b2e] hover:bg-[#1a1b1e] font-medium flex items-center transition">Zurück</a>
-          <button onclick="join()" class="flex-1 h-12 rounded-full bg-[#8ab4f8] hover:bg-[#aecbfa] text-[#0f0f10] font-semibold transition">Beitreten</button>
+          <a href="#home" class="h-12 px-6 rounded-full border font-medium flex items-center transition"
+            style="border-color: var(--border)">Zurück</a>
+          <button onclick="join()" class="flex-1 h-12 rounded-full font-semibold transition text-[#0f0f10]" style="background: var(--accent)">Beitreten</button>
         </div>
       </div>
     </div>
@@ -170,22 +220,30 @@
 </section>
 
 <!-- ==================== ROOM ==================== -->
-<section id="room" class="hidden h-full flex flex-col bg-[#0f0f10]">
+<section id="room" class="hidden h-full flex flex-col" style="background: var(--bg)">
   <!-- Top Bar -->
-  <div class="h-14 px-5 flex items-center justify-between text-sm shrink-0 border-b border-[#1a1b1e]">
+  <div class="h-14 px-5 flex items-center justify-between text-sm shrink-0 border-b" style="border-color: var(--border)">
     <div class="flex items-center gap-3">
-      <span class="font-mono font-medium text-[#e8eaed]" id="roomCode"></span>
-      <button onclick="copyLink()" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition text-[#9aa0a6] hover:text-white" title="Link kopieren">
+      <span class="font-mono font-medium" id="roomCode"></span>
+      <button onclick="copyLink()" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition" style="color: var(--muted)" title="Link kopieren">
         <i class="fa-solid fa-link text-xs"></i>
       </button>
-      <div class="flex items-center gap-1.5 text-[#9aa0a6]">
+      <div class="flex items-center gap-1.5" style="color: var(--muted)">
         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
         <span id="status" class="text-xs">Verbunden</span>
       </div>
     </div>
-    <div class="flex items-center gap-1.5 text-[#9aa0a6]">
-      <i class="fa-solid fa-users text-xs"></i>
-      <span id="count" class="font-medium text-[#e8eaed]">1</span>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5" style="color: var(--muted)">
+        <i class="fa-solid fa-users text-xs"></i>
+        <span id="count" class="font-medium">1</span>
+      </div>
+      <button onclick="toggleSettings()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-white/10 transition" title="Einstellungen">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -194,26 +252,29 @@
   <div id="fx" class="absolute inset-0 pointer-events-none overflow-hidden z-30"></div>
 
   <!-- Chat Drawer -->
-  <aside id="drawer" class="absolute top-0 right-0 h-full w-full sm:w-[380px] bg-[#1a1b1e] text-[#e8eaed] z-40 translate-x-full transition-transform duration-300 flex flex-col border-l border-[#2a2b2e]">
-    <div class="h-14 px-5 border-b border-[#2a2b2e] flex items-center justify-between shrink-0">
+  <aside id="drawer" class="absolute top-0 right-0 h-full w-full sm:w-[380px] z-40 translate-x-full transition-transform duration-300 flex flex-col border-l"
+    style="background: var(--card); border-color: var(--border); color: var(--text)">
+    <div class="h-14 px-5 border-b flex items-center justify-between shrink-0" style="border-color: var(--border)">
       <span class="font-semibold">Chat</span>
       <button onclick="drawer(false)" class="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center transition">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
     <div id="msgs" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-    <div class="p-4 border-t border-[#2a2b2e] flex gap-2 shrink-0">
+    <div class="p-4 border-t flex gap-2 shrink-0" style="border-color: var(--border)">
       <input id="chatIn" maxlength="500" placeholder="Nachricht senden…" 
-        class="flex-1 h-11 px-4 rounded-full bg-[#0f0f10] border border-[#2a2b2e] focus:outline-none focus:ring-2 focus:ring-[#8ab4f8]/40 text-sm"
+        class="flex-1 h-11 px-4 rounded-full border focus:outline-none focus:ring-2 text-sm"
+        style="background: var(--bg); border-color: var(--border); color: var(--text)"
         onkeydown="if(event.key==='Enter')sendChat()">
-      <button onclick="sendChat()" class="w-11 h-11 rounded-full bg-[#8ab4f8] text-[#0f0f10] flex items-center justify-center hover:bg-[#aecbfa] transition">
+      <button onclick="sendChat()" class="w-11 h-11 rounded-full flex items-center justify-center transition text-[#0f0f10]" style="background: var(--accent)">
         <i class="fa-solid fa-paper-plane text-sm"></i>
       </button>
     </div>
   </aside>
 
   <!-- Emoji Picker -->
-  <div id="emojis" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 z-40 bg-[#1a1b1e] rounded-2xl p-2 flex gap-1 text-2xl shadow-meet-lg border border-[#2a2b2e]"></div>
+  <div id="emojis" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 z-40 rounded-2xl p-2 flex gap-1 text-2xl shadow-meet-lg border"
+    style="background: var(--card); border-color: var(--border)"></div>
 
   <!-- Bottom Controls -->
   <div class="h-[88px] flex items-center justify-center gap-3 px-4 shrink-0">
@@ -232,11 +293,43 @@
       <i class="fa-solid fa-comment"></i>
       <span id="unread" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#ea4335] text-[10px] flex items-center justify-center font-bold text-white">0</span>
     </button>
+    <!-- Neues SVG Hangup Icon -->
     <button onclick="leave()" class="hangup-btn text-white ml-3" title="Auflegen">
-      <i class="fa-solid fa-phone-hangup text-lg"></i>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 2.59 3.4z"></path>
+        <line x1="23" y1="1" x2="1" y2="23"></line>
+      </svg>
     </button>
   </div>
 </section>
+
+<!-- Settings Panel -->
+<div id="settingsPanel" class="hidden fixed top-16 right-5 z-50 w-64 rounded-2xl border shadow-meet-lg p-4"
+  style="background: var(--card); border-color: var(--border)">
+  <div class="text-sm font-semibold mb-3">Einstellungen</div>
+  
+  <div class="mb-4">
+    <div class="text-xs mb-2" style="color: var(--muted)">Theme</div>
+    <div class="flex gap-2">
+      <button onclick="setTheme('dark')" class="flex-1 h-9 rounded-lg text-sm font-medium border transition" id="themeDark"
+        style="border-color: var(--border)">Dunkel</button>
+      <button onclick="setTheme('light')" class="flex-1 h-9 rounded-lg text-sm font-medium border transition" id="themeLight"
+        style="border-color: var(--border)">Hell</button>
+    </div>
+  </div>
+
+  <div>
+    <div class="text-xs mb-2" style="color: var(--muted)">Akzentfarbe</div>
+    <div class="flex gap-2 flex-wrap">
+      <button onclick="setAccent('#8ab4f8')" class="w-8 h-8 rounded-full border-2 border-transparent hover:scale-110 transition" style="background:#8ab4f8"></button>
+      <button onclick="setAccent('#34a853')" class="w-8 h-8 rounded-full border-2 border-transparent hover:scale-110 transition" style="background:#34a853"></button>
+      <button onclick="setAccent('#fbbc04')" class="w-8 h-8 rounded-full border-2 border-transparent hover:scale-110 transition" style="background:#fbbc04"></button>
+      <button onclick="setAccent('#ea4335')" class="w-8 h-8 rounded-full border-2 border-transparent hover:scale-110 transition" style="background:#ea4335"></button>
+      <button onclick="setAccent('#c58af9')" class="w-8 h-8 rounded-full border-2 border-transparent hover:scale-110 transition" style="background:#c58af9"></button>
+      <button onclick="setAccent('#ff8a65')" class="w-8 h-8 rounded-full border-2 border-transparent hover:scale-110 transition" style="background:#ff8a65"></button>
+    </div>
+  </div>
+</div>
 
 <div id="toasts" class="fixed bottom-32 right-5 z-50 space-y-2 pointer-events-none"></div>
 
@@ -252,21 +345,30 @@ const ICE = {
     { urls: 'stun:stun2.l.google.com:19302' }
   ]
 };
-const COL = ['#8ab4f8','#34a853','#fbbc04','#ea4335','#c58af9','#ff8a65','#4dd0e1','#81c784'];
+const AVATAR_COLORS = ['#8ab4f8','#34a853','#fbbc04','#ea4335','#c58af9','#ff8a65','#4dd0e1','#81c784','#f06292','#ba68c8'];
 
 const S = {
   view: 'home', name: localStorage.fm_name || '', room: '', slot: -1,
   peer: null, stream: null, mic: true, cam: true, hand: false, sharing: null,
-  links: {}, calls: {}, info: {}, seen: new Set(), meters: {}, unread: 0, ac: null, timer: null
+  links: {}, calls: {}, info: {}, seen: new Set(), meters: {}, unread: 0, ac: null, timer: null,
+  myColor: null
 };
 
-const col = n => COL[[...n].reduce((a,c) => a + c.charCodeAt(0), 0) % COL.length];
 const pid = j => PFX + S.room + '-' + j;
-const mine = () => ({ name: S.name, cam: S.cam || !!S.sharing, mic: S.mic, hand: S.hand });
+const mine = () => ({ name: S.name, cam: S.cam || !!S.sharing, mic: S.mic, hand: S.hand, color: S.myColor });
+
+function randomColor() {
+  return AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+}
 
 function toast(m, type = 'info') {
   const t = document.createElement('div');
-  t.className = `px-4 py-3 rounded-xl text-sm font-medium shadow-meet-lg animate-fade-up ${type === 'error' ? 'bg-[#ea4335] text-white' : 'bg-[#1a1b1e] text-white border border-[#2a2b2e]'}`;
+  t.className = `px-4 py-3 rounded-xl text-sm font-medium shadow-meet-lg animate-fade-up ${type === 'error' ? 'bg-[#ea4335] text-white' : ''}`;
+  if (type !== 'error') {
+    t.style.background = 'var(--card)';
+    t.style.border = '1px solid var(--border)';
+    t.style.color = 'var(--text)';
+  }
   t.textContent = m;
   $('toasts').appendChild(t);
   setTimeout(() => t.remove(), 3200);
@@ -276,6 +378,39 @@ function show(v) {
   S.view = v;
   ['home','lobby','room'].forEach(x => $(x).classList.toggle('hidden', x !== v));
 }
+
+/* ---------- Settings ---------- */
+function toggleSettings() {
+  const p = $('settingsPanel');
+  p.classList.toggle('hidden');
+}
+function setTheme(mode) {
+  document.body.classList.toggle('light', mode === 'light');
+  localStorage.fm_theme = mode;
+  $('themeDark').style.background = mode === 'dark' ? 'var(--accent)' : 'transparent';
+  $('themeDark').style.color = mode === 'dark' ? '#0f0f10' : 'var(--text)';
+  $('themeLight').style.background = mode === 'light' ? 'var(--accent)' : 'transparent';
+  $('themeLight').style.color = mode === 'light' ? '#0f0f10' : 'var(--text)';
+}
+function setAccent(color) {
+  document.documentElement.style.setProperty('--accent', color);
+  document.documentElement.style.setProperty('--accent-hover', color);
+  localStorage.fm_accent = color;
+}
+// Load saved settings
+(function() {
+  const theme = localStorage.fm_theme || 'dark';
+  setTheme(theme);
+  if (localStorage.fm_accent) setAccent(localStorage.fm_accent);
+})();
+
+// Close settings when clicking outside
+document.addEventListener('click', e => {
+  const p = $('settingsPanel');
+  if (!p.classList.contains('hidden') && !p.contains(e.target) && !e.target.closest('[onclick*="toggleSettings"]')) {
+    p.classList.add('hidden');
+  }
+});
 
 /* ---------- Routing ---------- */
 function gen() {
@@ -368,10 +503,12 @@ function mkTile(j, isNew = false) {
   if (t) return t;
   t = document.createElement('div');
   t.id = 'tile-' + j;
-  t.className = 'tile relative bg-[#1a1b1e] rounded-2xl overflow-hidden aspect-video flex items-center justify-center border border-[#2a2b2e]' + (isNew ? ' animate-pop-in' : '');
+  t.className = 'tile relative rounded-2xl overflow-hidden aspect-video flex items-center justify-center border' + (isNew ? ' animate-pop-in' : '');
+  t.style.background = 'var(--card)';
+  t.style.borderColor = 'var(--border)';
   t.innerHTML = `
     <video autoplay playsinline class="w-full h-full object-cover absolute inset-0"></video>
-    <div class="av absolute inset-0 flex items-center justify-center bg-[#1a1b1e]">
+    <div class="av absolute inset-0 flex items-center justify-center" style="background: var(--card)">
       <div class="w-28 h-28 rounded-full text-white text-4xl font-semibold flex items-center justify-center shadow-xl ring-4 ring-white/10"></div>
     </div>
     <div class="absolute bottom-3 left-3 tile-label px-3 py-1.5 rounded-xl text-xs text-white flex items-center gap-2 z-10">
@@ -387,13 +524,13 @@ function mkTile(j, isNew = false) {
 function upd(j) {
   const t = $('tile-' + j);
   if (!t) return;
-  const i = j === 'me' ? mine() : (S.info[j] || { name: 'Teilnehmer', cam: true, mic: true });
+  const i = j === 'me' ? mine() : (S.info[j] || { name: 'Teilnehmer', cam: true, mic: true, color: '#8ab4f8' });
   const v = t.querySelector('video');
   const hasLiveVideo = !!(v.srcObject && v.srcObject.getVideoTracks().some(tr => tr.readyState === 'live' && tr.enabled));
   t.querySelector('.av').classList.toggle('hidden', !!i.cam && hasLiveVideo);
   const a = t.querySelector('.av div');
   a.textContent = (i.name || '?')[0].toUpperCase();
-  a.style.background = col(i.name || '?');
+  a.style.background = i.color || '#8ab4f8';
   v.style.transform = (j === 'me' && !S.sharing) ? 'scaleX(-1)' : 'none';
   t.querySelector('.nm').textContent = i.name + (j === 'me' ? ' (Du)' : '');
   t.querySelector('.mic').className = 'mic fa-solid text-[10px] ' + (i.mic ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-red-400');
@@ -407,7 +544,7 @@ function layout() {
   $('count').textContent = n;
 }
 function addTile(j, s) {
-  const t = mkTile(j, true); // true = pop-in Animation
+  const t = mkTile(j, true);
   t.querySelector('video').srcObject = s;
   meter(j, s);
   upd(j);
@@ -451,6 +588,7 @@ function meter(j, s) {
 function join() {
   S.name = ($('lobName').value.trim() || 'Gast').slice(0, 24);
   localStorage.fm_name = S.name;
+  S.myColor = randomColor(); // Zufällige Farbe beim Joinen
   show('room');
   $('roomCode').textContent = S.room;
   setStatus('Verbinde…');
@@ -569,15 +707,16 @@ function bc(m) {
 function onData(j, d) {
   if (!d || typeof d !== 'object') return;
   if (d.id) { if (S.seen.has(d.id)) return; S.seen.add(d.id); }
-  const i = S.info[j] = S.info[j] || { name: 'Teilnehmer', cam: true, mic: true };
+  const i = S.info[j] = S.info[j] || { name: 'Teilnehmer', cam: true, mic: true, color: '#8ab4f8' };
   if (d.t === 'hi' || d.t === 'st') {
     const first = d.t === 'hi' && !i.hi;
     if (d.t === 'hi') i.hi = 1;
     Object.assign(i, {
       name: String(d.name || i.name).slice(0, 24),
-      cam: !!d.cam, mic: !!d.mic, hand: !!d.hand
+      cam: !!d.cam, mic: !!d.mic, hand: !!d.hand,
+      color: d.color || i.color || randomColor()
     });
-    mkTile(j, first); // pop-in wenn neu
+    mkTile(j, first);
     upd(j);
     if (first) toast(i.name + ' ist beigetreten');
   } else if (d.t === 'chat') {
@@ -592,7 +731,7 @@ function chat(who, text) {
   const m = document.createElement('div');
   m.className = 'space-y-0.5 animate-fade-up';
   m.innerHTML = `
-    <div class="text-xs text-[#9aa0a6]">${who} · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+    <div class="text-xs" style="color: var(--muted)">${who} · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
     <div class="text-sm break-words">${text}</div>`;
   $('msgs').appendChild(m);
   $('msgs').scrollTop = 1e9;

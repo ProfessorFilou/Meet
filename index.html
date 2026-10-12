@@ -13,28 +13,16 @@
     theme: {
       extend: {
         animation: {
-          'pop-in': 'popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-          'fade-up': 'fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          'pop-in': 'popIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          'fade-up': 'fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards',
           'soft-bounce': 'softBounce 2.8s ease-in-out infinite',
           'glow-pulse': 'glowPulse 3.5s ease-in-out infinite'
         },
         keyframes: {
-          popIn: {
-            '0%': { opacity: '0', transform: 'scale(0.88) translateY(20px)' },
-            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' }
-          },
-          fadeUp: {
-            '0%': { opacity: '0', transform: 'translateY(14px)' },
-            '100%': { opacity: '1', transform: 'translateY(0)' }
-          },
-          softBounce: {
-            '0%, 100%': { transform: 'translateY(0)' },
-            '50%': { transform: 'translateY(-10px)' }
-          },
-          glowPulse: {
-            '0%, 100%': { opacity: '0.35' },
-            '50%': { opacity: '0.7' }
-          }
+          popIn: { '0%': { opacity: '0', transform: 'scale(0.9) translateY(16px)' }, '100%': { opacity: '1', transform: 'scale(1) translateY(0)' } },
+          fadeUp: { '0%': { opacity: '0', transform: 'translateY(12px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+          softBounce: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-8px)' } },
+          glowPulse: { '0%, 100%': { opacity: '0.35' }, '50%': { opacity: '0.7' } }
         }
       }
     }
@@ -45,34 +33,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #3b82f6;
-    --accent-rgb: 59, 130, 246;
-    --bg: #0c0c0e;
-    --bg-elevated: #141416;
-    --border: rgba(255,255,255,0.08);
-    --text: #f4f4f5;
-    --muted: #a1a1aa;
-    --glass: rgba(255,255,255,0.055);
-    --glass-border: rgba(255,255,255,0.1);
-    --control-bg: rgba(255,255,255,0.08);
-    --control-hover: rgba(255,255,255,0.14);
+    --accent: #3b82f6; --accent-rgb: 59, 130, 246;
+    --bg: #0c0c0e; --bg-elevated: #141416;
+    --border: rgba(255,255,255,0.08); --text: #f4f4f5; --muted: #a1a1aa;
+    --glass: rgba(255,255,255,0.055); --glass-border: rgba(255,255,255,0.1);
+    --control-bg: rgba(255,255,255,0.08); --control-hover: rgba(255,255,255,0.14);
   }
   body.light {
-    --bg: #f4f5f7;
-    --bg-elevated: #ffffff;
-    --border: rgba(0,0,0,0.06);
-    --text: #18181b;
-    --muted: #71717a;
-    --glass: rgba(255,255,255,0.78);
-    --glass-border: rgba(0,0,0,0.07);
-    --control-bg: rgba(0,0,0,0.05);
-    --control-hover: rgba(0,0,0,0.09);
+    --bg: #f4f5f7; --bg-elevated: #fff;
+    --border: rgba(0,0,0,0.06); --text: #18181b; --muted: #71717a;
+    --glass: rgba(255,255,255,0.78); --glass-border: rgba(0,0,0,0.07);
+    --control-bg: rgba(0,0,0,0.05); --control-hover: rgba(0,0,0,0.09);
   }
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    transition: background 0.35s ease, color 0.35s ease;
+    background: var(--bg); color: var(--text);
+    transition: background .3s, color .3s;
     -webkit-tap-highlight-color: transparent;
     overscroll-behavior: none;
   }
@@ -87,110 +63,106 @@
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    box-shadow: 0 4px 24px rgba(0,0,0,.12);
   }
-  body.light .glass-strong {
-    box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
-  }
-  .accent-glow {
-    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.2), 0 4px 20px rgba(var(--accent-rgb), 0.18);
-  }
-  .speak {
-    box-shadow: 0 0 0 3px #22c55e, 0 0 24px rgba(34,197,94,0.35) !important;
-  }
+  body.light .glass-strong { box-shadow: 0 8px 32px rgba(0,0,0,.06), inset 0 1px 0 rgba(255,255,255,.7); }
+  .accent-glow { box-shadow: 0 0 0 1px rgba(var(--accent-rgb),.2), 0 4px 20px rgba(var(--accent-rgb),.18); }
+  .speak { box-shadow: 0 0 0 3px #22c55e, 0 0 22px rgba(34,197,94,.35) !important; }
+  .pinned { box-shadow: 0 0 0 3px var(--accent), 0 0 28px rgba(var(--accent-rgb),.35) !important; }
   .control-btn {
     width: 52px; height: 52px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     background: var(--control-bg); border: 1px solid var(--glass-border);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--text); touch-action: manipulation;
+    transition: all .2s; color: var(--text); touch-action: manipulation;
   }
-  .control-btn:active { transform: scale(0.92); }
-  .control-btn.muted { background: #ef4444 !important; border-color: transparent; color: white; }
+  .control-btn:active { transform: scale(.92); }
+  .control-btn.muted { background: #ef4444 !important; border-color: transparent; color: #fff; }
+  .control-btn.active-feature { background: var(--accent) !important; color: #fff; border-color: transparent; }
   .hangup-btn {
     width: 64px; height: 52px; border-radius: 9999px;
-    background: linear-gradient(135deg, #ef4444, #dc2626); color: white;
+    background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 18px rgba(239,68,68,0.35); border: none; touch-action: manipulation;
+    box-shadow: 0 4px 18px rgba(239,68,68,.35); border: none; touch-action: manipulation;
   }
-  .hangup-btn:active { transform: scale(0.94); }
+  .hangup-btn:active { transform: scale(.94); }
   .tile {
     background: var(--bg-elevated); border: 1px solid var(--border);
-    border-radius: 20px; overflow: hidden;
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    border-radius: 20px; overflow: hidden; position: relative;
+    transition: all .3s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 4px 24px rgba(0,0,0,.08);
   }
   .tile-label {
-    background: rgba(0,0,0,0.55); backdrop-filter: blur(16px);
+    background: rgba(0,0,0,.55); backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.08); border-radius: 12px;
   }
-  body.light .tile-label { background: rgba(24,24,27,0.72); }
+  body.light .tile-label { background: rgba(24,24,27,.72); }
   .panel {
     background: var(--glass);
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
   }
-  body.light .panel { box-shadow: 0 24px 64px rgba(0,0,0,0.1); }
-  .panel-hidden { opacity: 0; pointer-events: none; transform: translateY(-8px) scale(0.97); }
-  .panel { transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1); }
+  body.light .panel { box-shadow: 0 24px 64px rgba(0,0,0,.1); }
+  .panel-hidden { opacity: 0; pointer-events: none; transform: translateY(-8px) scale(.97); }
+  .panel { transition: opacity .2s, transform .2s; }
   @keyframes floatUp {
-    0% { transform: translateY(0) scale(0.85); opacity: 1; }
+    0% { transform: translateY(0) scale(.85); opacity: 1; }
     100% { transform: translateY(-200px) scale(1.4); opacity: 0; }
   }
   .fl {
-    animation: floatUp 2.4s ease-out forwards;
-    position: absolute; bottom: 120px; font-size: 2.6rem;
+    animation: floatUp 2.3s ease-out forwards;
+    position: absolute; bottom: 120px; font-size: 2.5rem;
     pointer-events: none; z-index: 40;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.25));
   }
   .mirror { transform: scaleX(-1) !important; }
   #emptyState .orb {
     width: 140px; height: 140px; border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, rgba(var(--accent-rgb), 0.3), transparent 70%);
+    background: radial-gradient(circle at 35% 35%, rgba(var(--accent-rgb),.3), transparent 70%);
     filter: blur(24px); animation: glowPulse 3.5s ease-in-out infinite;
   }
   ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.25); border-radius: 10px; }
-  input:focus-visible, select:focus-visible {
-    box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.4);
-  }
+  ::-webkit-scrollbar-thumb { background: rgba(128,128,128,.25); border-radius: 10px; }
+  input:focus-visible, select:focus-visible { box-shadow: 0 0 0 2px rgba(var(--accent-rgb),.4); }
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
   .safe-top { padding-top: env(safe-area-inset-top, 0px); }
   video { object-fit: cover; background: #000; }
   select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px !important;
+    background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px !important;
   }
   body.light select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   }
   @media (max-width: 640px) {
-    .control-btn { width: 48px; height: 48px; }
-    .hangup-btn { width: 58px; height: 48px; }
+    .control-btn { width: 46px; height: 46px; }
+    .hangup-btn { width: 56px; height: 46px; }
   }
-  /* Focus mode: big speaker */
-  #grid.focus-mode {
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
+  /* Controls auto-hide */
+  #room.controls-hidden #bottomBar,
+  #room.controls-hidden #topBar { opacity: 0; pointer-events: none; transform: translateY(8px); }
+  #room.controls-hidden #topBar { transform: translateY(-8px); }
+  #topBar, #bottomBar { transition: opacity .35s, transform .35s; }
+  /* Focus / Pin layout */
+  #grid.focus-mode, #grid.pin-mode {
+    display: flex !important; flex-direction: column; align-items: center; gap: 12px;
   }
-  #grid.focus-mode .tile:not(.is-speaking):not(#tile-me) {
-    width: 140px !important;
-    height: 90px !important;
-    flex-shrink: 0;
+  #grid.focus-mode .tile:not(.is-speaking):not(#tile-me),
+  #grid.pin-mode .tile:not(.is-pinned) {
+    width: 130px !important; height: 80px !important; flex-shrink: 0;
   }
   #grid.focus-mode .tile.is-speaking,
-  #grid.focus-mode #tile-me {
-    width: min(100%, 720px) !important;
-    height: auto !important;
-    aspect-ratio: 16/9;
+  #grid.focus-mode #tile-me,
+  #grid.pin-mode .tile.is-pinned {
+    width: min(100%, 780px) !important; height: auto !important; aspect-ratio: 16/9;
   }
+  .net-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .net-good { background: #22c55e; }
+  .net-mid { background: #eab308; }
+  .net-bad { background: #ef4444; }
 </style>
 </head>
 <body class="h-full overflow-hidden">
@@ -198,38 +170,37 @@
 <!-- HOME -->
 <section id="home" class="hidden h-full flex flex-col relative">
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-20 blur-[100px]" style="background: var(--accent)"></div>
-    <div class="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-10 blur-[80px]" style="background: var(--accent)"></div>
+    <div class="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-20 blur-[100px]" style="background:var(--accent)"></div>
+    <div class="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-10 blur-[80px]" style="background:var(--accent)"></div>
   </div>
   <header class="h-16 px-6 flex items-center justify-between relative z-10 safe-top">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-lg text-white accent-glow" style="background: linear-gradient(135deg, var(--accent), #2563eb)">F</div>
+      <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-lg text-white accent-glow" style="background:linear-gradient(135deg,var(--accent),#2563eb)">F</div>
       <span class="text-xl font-semibold tracking-tight">FilouMeet</span>
     </div>
-    <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center active:scale-95 transition">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center active:scale-95">
+      <i class="fa-solid fa-gear text-sm"></i>
     </button>
   </header>
   <main class="flex-1 flex items-center justify-center px-4 relative z-10">
     <div class="w-full max-w-[440px] text-center animate-fade-up">
       <h1 class="text-4xl sm:text-5xl font-semibold tracking-tight mb-3">Videokonferenzen</h1>
-      <p class="text-lg mb-10" style="color: var(--muted)">Sicher · Direkt im Browser · Bis 8 Personen</p>
+      <p class="text-lg mb-10" style="color:var(--muted)">Sicher · Direkt im Browser · Bis 8 Personen</p>
       <div class="glass-strong rounded-[28px] p-8">
         <div class="flex flex-col sm:flex-row gap-3 mb-5">
-          <input id="joinInput" type="text" placeholder="Code oder Link eingeben" 
+          <input id="joinInput" type="text" placeholder="Code oder Link eingeben"
             class="flex-1 h-12 px-5 rounded-full glass border-0 text-center sm:text-left placeholder:opacity-50"
-            style="color: var(--text)" onkeydown="if(event.key==='Enter')joinFromHome()">
-          <button onclick="joinFromHome()" class="h-12 px-7 rounded-full font-semibold text-white transition active:scale-95"
-            style="background: var(--accent); box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.35)">Beitreten</button>
+            style="color:var(--text)" onkeydown="if(event.key==='Enter')joinFromHome()">
+          <button onclick="joinFromHome()" class="h-12 px-7 rounded-full font-semibold text-white active:scale-95"
+            style="background:var(--accent);box-shadow:0 4px 18px rgba(var(--accent-rgb),.35)">Beitreten</button>
         </div>
         <div class="relative flex items-center gap-4 mb-5">
-          <div class="flex-1 h-px" style="background: var(--border)"></div>
-          <span class="text-sm" style="color: var(--muted)">oder</span>
-          <div class="flex-1 h-px" style="background: var(--border)"></div>
+          <div class="flex-1 h-px" style="background:var(--border)"></div>
+          <span class="text-sm" style="color:var(--muted)">oder</span>
+          <div class="flex-1 h-px" style="background:var(--border)"></div>
         </div>
-        <button onclick="showCreateModal()" class="w-full py-3.5 rounded-full glass font-medium transition flex items-center justify-center gap-3 active:scale-95">
-          <i class="fa-solid fa-video" style="color: var(--accent)"></i>
-          Neues Meeting starten
+        <button onclick="showCreateModal()" class="w-full py-3.5 rounded-full glass font-medium flex items-center justify-center gap-3 active:scale-95">
+          <i class="fa-solid fa-video" style="color:var(--accent)"></i> Neues Meeting starten
         </button>
       </div>
     </div>
@@ -242,13 +213,13 @@
     <h3 class="text-xl font-semibold mb-5">Neues Meeting</h3>
     <div class="space-y-4">
       <div>
-        <label class="text-sm mb-1.5 block" style="color: var(--muted)">Optional: Passwort</label>
+        <label class="text-sm mb-1.5 block" style="color:var(--muted)">Optional: Passwort</label>
         <input id="createPass" type="password" placeholder="Leer = kein Passwort" maxlength="20"
-          class="w-full h-12 px-4 rounded-2xl glass border-0" style="color: var(--text)">
+          class="w-full h-12 px-4 rounded-2xl glass border-0" style="color:var(--text)">
       </div>
       <div class="flex gap-3 pt-2">
         <button onclick="$('createModal').classList.add('hidden')" class="flex-1 h-12 rounded-2xl glass font-medium active:scale-95">Abbrechen</button>
-        <button onclick="createRoom()" class="flex-1 h-12 rounded-2xl font-semibold text-white active:scale-95" style="background: var(--accent)">Erstellen</button>
+        <button onclick="createRoom()" class="flex-1 h-12 rounded-2xl font-semibold text-white active:scale-95" style="background:var(--accent)">Erstellen</button>
       </div>
     </div>
   </div>
@@ -257,19 +228,19 @@
 <!-- LOBBY -->
 <section id="lobby" class="hidden h-full flex flex-col relative">
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
-    <div class="absolute top-1/4 right-1/4 w-80 h-80 rounded-full opacity-15 blur-[80px]" style="background: var(--accent)"></div>
+    <div class="absolute top-1/4 right-1/4 w-80 h-80 rounded-full opacity-15 blur-[80px]" style="background:var(--accent)"></div>
   </div>
   <header class="h-16 px-6 flex items-center justify-between relative z-10 safe-top">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white accent-glow" style="background: linear-gradient(135deg, var(--accent), #2563eb)">F</div>
+      <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white accent-glow" style="background:linear-gradient(135deg,var(--accent),#2563eb)">F</div>
       <span class="font-semibold">FilouMeet</span>
     </div>
     <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center active:scale-95">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <i class="fa-solid fa-gear text-sm"></i>
     </button>
   </header>
   <main class="flex-1 flex items-center justify-center px-4 py-8 relative z-10 overflow-y-auto">
-    <div class="w-full max-w-4xl grid md:grid-cols-2 gap-8 md:gap-10 items-center">
+    <div class="w-full max-w-4xl grid md:grid-cols-2 gap-8 items-center">
       <div class="relative aspect-video rounded-3xl overflow-hidden glass-strong">
         <video id="prev" autoplay playsinline muted webkit-playsinline class="w-full h-full object-cover"></video>
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
@@ -277,37 +248,44 @@
           <button onclick="tog('video')" class="b-cam control-btn"><i></i></button>
         </div>
       </div>
-      <div class="space-y-5 animate-fade-up">
+      <div class="space-y-4 animate-fade-up">
         <div>
           <h2 class="text-2xl font-semibold mb-1">Bereit zum Beitreten?</h2>
-          <p class="text-sm" style="color: var(--muted)">Raum: <span id="lobRoom" class="font-mono font-medium" style="color: var(--accent)"></span></p>
+          <p class="text-sm" style="color:var(--muted)">Raum: <span id="lobRoom" class="font-mono font-medium" style="color:var(--accent)"></span></p>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-2" style="color: var(--muted)">Dein Name</label>
-          <input id="lobName" maxlength="24" placeholder="Name eingeben" 
-            class="w-full h-12 px-5 rounded-full glass border-0" style="color: var(--text)"
+          <label class="block text-sm font-medium mb-2" style="color:var(--muted)">Dein Name</label>
+          <input id="lobName" maxlength="24" placeholder="Name eingeben"
+            class="w-full h-12 px-5 rounded-full glass border-0" style="color:var(--text)"
             onkeydown="if(event.key==='Enter')join()">
         </div>
         <div id="passField" class="hidden">
-          <label class="block text-sm font-medium mb-2" style="color: var(--muted)">Passwort</label>
+          <label class="block text-sm font-medium mb-2" style="color:var(--muted)">Passwort</label>
           <input id="lobPass" type="password" maxlength="20" placeholder="Passwort eingeben"
-            class="w-full h-12 px-5 rounded-full glass border-0" style="color: var(--text)">
+            class="w-full h-12 px-5 rounded-full glass border-0" style="color:var(--text)">
         </div>
-        <!-- Device quick select in lobby -->
         <div class="space-y-2">
           <div>
-            <label class="block text-xs mb-1" style="color: var(--muted)">Kamera</label>
-            <select id="lobCam" onchange="switchDevice('video', this.value)" class="w-full h-10 px-3 rounded-xl glass border-0 text-sm" style="color: var(--text)"></select>
+            <label class="block text-xs mb-1" style="color:var(--muted)">Kamera</label>
+            <select id="lobCam" onchange="switchDevice('video', this.value)" class="w-full h-10 px-3 rounded-xl glass border-0 text-sm" style="color:var(--text)"></select>
           </div>
           <div>
-            <label class="block text-xs mb-1" style="color: var(--muted)">Mikrofon</label>
-            <select id="lobMic" onchange="switchDevice('audio', this.value)" class="w-full h-10 px-3 rounded-xl glass border-0 text-sm" style="color: var(--text)"></select>
+            <label class="block text-xs mb-1" style="color:var(--muted)">Mikrofon</label>
+            <select id="lobMic" onchange="switchDevice('audio', this.value)" class="w-full h-10 px-3 rounded-xl glass border-0 text-sm" style="color:var(--text)"></select>
+          </div>
+          <div>
+            <label class="block text-xs mb-1" style="color:var(--muted)">Qualität</label>
+            <select id="lobQuality" onchange="setQuality(this.value)" class="w-full h-10 px-3 rounded-xl glass border-0 text-sm" style="color:var(--text)">
+              <option value="low">Niedrig (schneller)</option>
+              <option value="medium" selected>Mittel</option>
+              <option value="high">Hoch</option>
+            </select>
           </div>
         </div>
         <div class="flex gap-3 pt-1">
-          <a href="#home" class="h-12 px-6 rounded-full glass font-medium flex items-center transition active:scale-95">Zurück</a>
-          <button onclick="join()" class="flex-1 h-12 rounded-full font-semibold text-white transition active:scale-95" 
-            style="background: var(--accent); box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.3)">Beitreten</button>
+          <a href="#home" class="h-12 px-6 rounded-full glass font-medium flex items-center active:scale-95">Zurück</a>
+          <button onclick="join()" class="flex-1 h-12 rounded-full font-semibold text-white active:scale-95"
+            style="background:var(--accent);box-shadow:0 4px 18px rgba(var(--accent-rgb),.3)">Beitreten</button>
         </div>
       </div>
     </div>
@@ -315,38 +293,30 @@
 </section>
 
 <!-- ROOM -->
-<section id="room" class="hidden h-full flex flex-col relative" style="background: var(--bg)">
-  <div class="h-14 px-4 sm:px-5 flex items-center justify-between text-sm shrink-0 relative z-20 safe-top">
+<section id="room" class="hidden h-full flex flex-col relative" style="background:var(--bg)">
+  <div id="topBar" class="h-14 px-4 sm:px-5 flex items-center justify-between text-sm shrink-0 relative z-20 safe-top">
     <div class="flex items-center gap-1.5 sm:gap-2">
       <span class="font-mono font-medium tracking-wide text-xs sm:text-sm" id="roomCode"></span>
-      <button onclick="copyCode()" class="w-8 h-8 rounded-full glass flex items-center justify-center active:scale-95 transition" style="color: var(--muted)" title="Code kopieren">
-        <i class="fa-solid fa-copy text-xs"></i>
-      </button>
-      <button onclick="copyLink()" class="w-8 h-8 rounded-full glass flex items-center justify-center active:scale-95 transition" style="color: var(--muted)" title="Link kopieren">
-        <i class="fa-solid fa-link text-xs"></i>
-      </button>
-      <div class="flex items-center gap-1.5 ml-1" style="color: var(--muted)">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" id="statusDot"></span>
+      <button onclick="copyCode()" class="w-8 h-8 rounded-full glass flex items-center justify-center active:scale-95" style="color:var(--muted)" title="Code"><i class="fa-solid fa-copy text-xs"></i></button>
+      <button onclick="copyLink()" class="w-8 h-8 rounded-full glass flex items-center justify-center active:scale-95" style="color:var(--muted)" title="Link"><i class="fa-solid fa-link text-xs"></i></button>
+      <div class="flex items-center gap-1.5 ml-1" style="color:var(--muted)">
+        <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
         <span id="status" class="text-xs">Verbunden</span>
       </div>
-    </div>
-    <div class="flex items-center gap-1.5 sm:gap-2">
-      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full glass text-xs" style="color: var(--muted)">
-        <i class="fa-solid fa-users text-[10px]"></i>
-        <span id="count" class="font-medium" style="color: var(--text)">1</span>
+      <div class="hidden sm:flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full glass text-xs" title="Netzwerk">
+        <span id="netDot" class="net-dot net-good"></span>
+        <span id="netLabel">Gut</span>
       </div>
-      <button onclick="toggleFocusMode()" id="bFocus" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 transition" title="Fokus-Ansicht">
-        <i class="fa-solid fa-expand text-sm"></i>
-      </button>
-      <button onclick="toggleFullscreen()" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 transition hidden sm:flex" title="Vollbild">
-        <i class="fa-solid fa-maximize text-sm"></i>
-      </button>
-      <button onclick="togglePanel('participantsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 transition" title="Teilnehmer">
-        <i class="fa-solid fa-user-group text-sm"></i>
-      </button>
-      <button onclick="togglePanel('settingsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 transition" title="Einstellungen">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full glass text-xs" style="color:var(--muted)">
+        <i class="fa-solid fa-users text-[10px]"></i>
+        <span id="count" class="font-medium" style="color:var(--text)">1</span>
+      </div>
+      <button onclick="toggleFocusMode()" id="bFocus" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95" title="Fokus"><i class="fa-solid fa-expand text-sm"></i></button>
+      <button onclick="toggleFullscreen()" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 hidden sm:flex" title="Vollbild"><i class="fa-solid fa-maximize text-sm"></i></button>
+      <button onclick="togglePanel('participantsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95" title="Teilnehmer"><i class="fa-solid fa-user-group text-sm"></i></button>
+      <button onclick="togglePanel('settingsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95" title="Einstellungen"><i class="fa-solid fa-gear text-sm"></i></button>
     </div>
   </div>
 
@@ -359,44 +329,45 @@
       <div class="w-24 h-24 rounded-full glass-strong flex items-center justify-center text-4xl animate-soft-bounce relative z-10">👋</div>
     </div>
     <p class="text-xl font-semibold mb-1.5">Du bist allein hier</p>
-    <p class="text-sm mb-6" style="color: var(--muted)">Teile den Link, damit andere beitreten können</p>
-    <button onclick="copyLink()" class="h-10 px-5 rounded-full glass text-sm font-medium flex items-center gap-2 active:scale-95 transition pointer-events-auto">
-      <i class="fa-solid fa-link text-xs" style="color: var(--accent)"></i> Link kopieren
+    <p class="text-sm mb-6" style="color:var(--muted)">Teile den Link, damit andere beitreten können</p>
+    <button onclick="copyLink()" class="h-10 px-5 rounded-full glass text-sm font-medium flex items-center gap-2 active:scale-95 pointer-events-auto">
+      <i class="fa-solid fa-link text-xs" style="color:var(--accent)"></i> Link kopieren
     </button>
   </div>
 
   <!-- Chat -->
   <aside id="drawer" class="absolute top-0 right-0 h-full w-full sm:w-[380px] z-40 translate-x-full transition-transform duration-300 flex flex-col panel">
-    <div class="h-14 px-5 flex items-center justify-between shrink-0 border-b safe-top" style="border-color: var(--border)">
+    <div class="h-14 px-5 flex items-center justify-between shrink-0 border-b safe-top" style="border-color:var(--border)">
       <span class="font-semibold">Chat</span>
       <button onclick="drawer(false)" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div id="msgs" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-    <div class="p-4 border-t flex gap-2 shrink-0 safe-bottom" style="border-color: var(--border)">
-      <input id="chatIn" maxlength="500" placeholder="Nachricht senden…" 
-        class="flex-1 h-11 px-4 rounded-full glass border-0 text-sm" style="color: var(--text)"
+    <div class="p-4 border-t flex gap-2 shrink-0 safe-bottom" style="border-color:var(--border)">
+      <input id="chatIn" maxlength="500" placeholder="Nachricht senden…"
+        class="flex-1 h-11 px-4 rounded-full glass border-0 text-sm" style="color:var(--text)"
         onkeydown="if(event.key==='Enter')sendChat()">
-      <button onclick="sendChat()" class="w-11 h-11 rounded-full flex items-center justify-center text-white transition active:scale-95" style="background: var(--accent)">
+      <button onclick="sendChat()" class="w-11 h-11 rounded-full flex items-center justify-center text-white active:scale-95" style="background:var(--accent)">
         <i class="fa-solid fa-paper-plane text-sm"></i>
       </button>
     </div>
   </aside>
 
-  <div id="emojis" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 z-40 rounded-2xl p-2 flex gap-1 text-2xl panel"></div>
+  <div id="emojis" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 z-40 rounded-2xl p-2 flex flex-wrap gap-1 text-2xl panel max-w-[280px] justify-center"></div>
 
   <!-- Bottom Controls -->
-  <div class="h-[88px] flex items-center justify-center gap-2 sm:gap-2.5 px-3 sm:px-4 shrink-0 relative z-20 safe-bottom">
+  <div id="bottomBar" class="h-[88px] flex items-center justify-center gap-1.5 sm:gap-2.5 px-2 sm:px-4 shrink-0 relative z-20 safe-bottom">
     <button onclick="tog('audio')" oncontextmenu="showContext(event,'mic')" class="b-mic control-btn" title="Mikrofon"><i></i></button>
     <button onclick="tog('video')" oncontextmenu="showContext(event,'cam')" class="b-cam control-btn" title="Kamera"><i></i></button>
-    <button onclick="share()" id="bShare" class="control-btn hidden sm:flex" title="Bildschirm teilen"><i class="fa-solid fa-display"></i></button>
-    <button onclick="hand()" id="bHand" class="control-btn" title="Hand heben"><i class="fa-solid fa-hand"></i></button>
+    <button onclick="share()" id="bShare" class="control-btn hidden sm:flex" title="Bildschirm"><i class="fa-solid fa-display"></i></button>
+    <button onclick="hand()" id="bHand" class="control-btn" title="Hand"><i class="fa-solid fa-hand"></i></button>
     <button onclick="$('emojis').classList.toggle('hidden')" class="control-btn" title="Reaktion"><i class="fa-solid fa-face-smile"></i></button>
     <button onclick="drawer(true)" class="relative control-btn" title="Chat">
       <i class="fa-solid fa-comment"></i>
       <span id="unread" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-[10px] flex items-center justify-center font-bold text-white">0</span>
     </button>
-    <button onclick="togglePiP()" id="bPip" class="control-btn hidden sm:flex" title="Bild-in-Bild"><i class="fa-solid fa-window-restore"></i></button>
-    <button onclick="leave()" class="hangup-btn ml-1 sm:ml-2" title="Auflegen">
+    <button onclick="toggleRecord()" id="bRec" class="control-btn" title="Aufnehmen"><i class="fa-solid fa-circle text-red-500"></i></button>
+    <button onclick="togglePiP()" id="bPip" class="control-btn hidden sm:flex" title="PiP"><i class="fa-solid fa-window-restore"></i></button>
+    <button onclick="leave()" class="hangup-btn ml-1" title="Auflegen">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 2.59 3.4z"/><line x1="23" y1="1" x2="1" y2="23"/>
       </svg>
@@ -405,19 +376,19 @@
 </section>
 
 <!-- Participants -->
-<div id="participantsPanel" class="panel-hidden fixed top-16 right-3 sm:right-5 z-50 w-72 rounded-2xl panel p-4">
+<div id="participantsPanel" class="panel-hidden fixed top-16 right-3 sm:right-5 z-50 w-80 rounded-2xl panel p-4 max-h-[75vh] overflow-y-auto">
   <div class="flex items-center justify-between mb-3">
     <span class="font-semibold text-sm">Teilnehmer</span>
     <button onclick="togglePanel('participantsPanel')" class="w-7 h-7 rounded-full glass flex items-center justify-center active:scale-95"><i class="fa-solid fa-xmark text-xs"></i></button>
   </div>
-  <div id="partList" class="space-y-1 max-h-80 overflow-y-auto"></div>
-  <div id="hostActions" class="hidden mt-3 pt-3 border-t space-y-2" style="border-color: var(--border)">
-    <button onclick="muteAll(true)" class="w-full h-9 rounded-xl text-sm font-medium glass active:scale-95 transition">Alle stummschalten</button>
-    <button onclick="muteAll(false)" class="w-full h-9 rounded-xl text-sm font-medium glass active:scale-95 transition">Stummschaltung aufheben</button>
+  <div id="partList" class="space-y-1"></div>
+  <div id="hostActions" class="hidden mt-3 pt-3 border-t space-y-2" style="border-color:var(--border)">
+    <button onclick="muteAll(true)" class="w-full h-9 rounded-xl text-sm font-medium glass active:scale-95">Alle stummschalten</button>
+    <button onclick="muteAll(false)" class="w-full h-9 rounded-xl text-sm font-medium glass active:scale-95">Stummschaltung aufheben</button>
   </div>
 </div>
 
-<!-- Settings (erweitert mit Geräteauswahl) -->
+<!-- Settings -->
 <div id="settingsPanel" class="panel-hidden fixed top-16 right-3 sm:right-5 z-50 w-80 max-h-[80vh] overflow-y-auto rounded-2xl panel p-4">
   <div class="flex items-center justify-between mb-3">
     <span class="font-semibold text-sm">Einstellungen</span>
@@ -425,37 +396,63 @@
   </div>
   <div class="space-y-4 text-sm">
     <div>
-      <div class="text-xs mb-1.5" style="color: var(--muted)">Dein Name</div>
+      <div class="text-xs mb-1.5" style="color:var(--muted)">Dein Name</div>
       <div class="flex gap-2">
-        <input id="setName" maxlength="24" class="flex-1 h-9 px-3 rounded-xl glass border-0 text-sm" style="color: var(--text)">
-        <button onclick="changeName()" class="h-9 px-3 rounded-xl text-xs font-semibold text-white active:scale-95" style="background: var(--accent)">OK</button>
+        <input id="setName" maxlength="24" class="flex-1 h-9 px-3 rounded-xl glass border-0 text-sm" style="color:var(--text)">
+        <button onclick="changeName()" class="h-9 px-3 rounded-xl text-xs font-semibold text-white active:scale-95" style="background:var(--accent)">OK</button>
       </div>
     </div>
 
-    <!-- Geräteauswahl -->
-    <div class="pt-1 border-t" style="border-color: var(--border)">
+    <div class="pt-1 border-t" style="border-color:var(--border)">
       <div class="flex items-center justify-between mb-2">
-        <div class="text-xs font-medium" style="color: var(--muted)">Geräte</div>
-        <button onclick="refreshDevices()" class="text-xs px-2 py-1 rounded-lg glass active:scale-95" style="color: var(--accent)">Neu laden</button>
+        <div class="text-xs font-medium" style="color:var(--muted)">Geräte</div>
+        <button onclick="refreshDevices()" class="text-xs px-2 py-1 rounded-lg glass active:scale-95" style="color:var(--accent)">Neu laden</button>
       </div>
       <div class="space-y-2.5">
         <div>
-          <label class="text-xs mb-1 block" style="color: var(--muted)">Kamera</label>
-          <select id="setCam" onchange="switchDevice('video', this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color: var(--text)"></select>
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Kamera</label>
+          <select id="setCam" onchange="switchDevice('video', this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color:var(--text)"></select>
         </div>
         <div>
-          <label class="text-xs mb-1 block" style="color: var(--muted)">Mikrofon</label>
-          <select id="setMic" onchange="switchDevice('audio', this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color: var(--text)"></select>
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Mikrofon</label>
+          <select id="setMic" onchange="switchDevice('audio', this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color:var(--text)"></select>
         </div>
         <div id="speakerWrap">
-          <label class="text-xs mb-1 block" style="color: var(--muted)">Lautsprecher</label>
-          <select id="setSpeaker" onchange="switchSpeaker(this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color: var(--text)"></select>
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Lautsprecher</label>
+          <select id="setSpeaker" onchange="switchSpeaker(this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color:var(--text)"></select>
+        </div>
+        <div>
+          <label class="text-xs mb-1 block" style="color:var(--muted)">Qualität</label>
+          <select id="setQuality" onchange="setQuality(this.value)" class="w-full h-9 px-3 rounded-xl glass border-0 text-xs" style="color:var(--text)">
+            <option value="low">Niedrig</option>
+            <option value="medium">Mittel</option>
+            <option value="high">Hoch</option>
+          </select>
         </div>
       </div>
     </div>
 
+    <div class="flex items-center justify-between">
+      <span class="text-xs" style="color:var(--muted)">Rauschunterdrückung</span>
+      <button onclick="toggleNoise()" id="noiseBtn" class="w-10 h-6 rounded-full relative transition" style="background:var(--accent)">
+        <span class="absolute top-0.5 left-[18px] w-5 h-5 rounded-full bg-white transition-all shadow"></span>
+      </button>
+    </div>
+    <div class="flex items-center justify-between">
+      <span class="text-xs" style="color:var(--muted)">Sounds</span>
+      <button onclick="toggleSounds()" id="soundBtn" class="w-10 h-6 rounded-full relative transition" style="background:var(--accent)">
+        <span class="absolute top-0.5 left-[18px] w-5 h-5 rounded-full bg-white transition-all shadow"></span>
+      </button>
+    </div>
+    <div class="flex items-center justify-between">
+      <span class="text-xs" style="color:var(--muted)">Kamera spiegeln</span>
+      <button onclick="toggleMirror()" id="mirrorBtn" class="w-10 h-6 rounded-full relative transition" style="background:rgba(128,128,128,.25)">
+        <span class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-all shadow"></span>
+      </button>
+    </div>
+
     <div>
-      <div class="text-xs mb-1.5" style="color: var(--muted)">Theme</div>
+      <div class="text-xs mb-1.5" style="color:var(--muted)">Theme</div>
       <div class="flex gap-1.5">
         <button onclick="setTheme('system')" id="thSystem" class="flex-1 h-8 rounded-xl text-xs glass active:scale-95">System</button>
         <button onclick="setTheme('dark')" id="thDark" class="flex-1 h-8 rounded-xl text-xs glass active:scale-95">Dunkel</button>
@@ -463,68 +460,74 @@
       </div>
     </div>
     <div>
-      <div class="text-xs mb-1.5" style="color: var(--muted)">Akzentfarbe</div>
+      <div class="text-xs mb-1.5" style="color:var(--muted)">Akzentfarbe</div>
       <div class="flex gap-2 flex-wrap">
-        <button onclick="setAccent('#3b82f6','59,130,246')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#3b82f6"></button>
-        <button onclick="setAccent('#22c55e','34,197,94')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#22c55e"></button>
-        <button onclick="setAccent('#eab308','234,179,8')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#eab308"></button>
-        <button onclick="setAccent('#ef4444','239,68,68')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#ef4444"></button>
-        <button onclick="setAccent('#a855f7','168,85,247')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#a855f7"></button>
-        <button onclick="setAccent('#f97316','249,115,22')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#f97316"></button>
+        <button onclick="setAccent('#3b82f6','59,130,246')" class="w-7 h-7 rounded-full active:scale-95" style="background:#3b82f6"></button>
+        <button onclick="setAccent('#22c55e','34,197,94')" class="w-7 h-7 rounded-full active:scale-95" style="background:#22c55e"></button>
+        <button onclick="setAccent('#eab308','234,179,8')" class="w-7 h-7 rounded-full active:scale-95" style="background:#eab308"></button>
+        <button onclick="setAccent('#ef4444','239,68,68')" class="w-7 h-7 rounded-full active:scale-95" style="background:#ef4444"></button>
+        <button onclick="setAccent('#a855f7','168,85,247')" class="w-7 h-7 rounded-full active:scale-95" style="background:#a855f7"></button>
+        <button onclick="setAccent('#f97316','249,115,22')" class="w-7 h-7 rounded-full active:scale-95" style="background:#f97316"></button>
       </div>
     </div>
-    <div class="flex items-center justify-between">
-      <span class="text-xs" style="color: var(--muted)">Kamera spiegeln</span>
-      <button onclick="toggleMirror()" id="mirrorBtn" class="w-10 h-6 rounded-full relative transition" style="background:rgba(128,128,128,0.25)">
-        <span class="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-all shadow"></span>
-      </button>
-    </div>
     <div>
-      <div class="text-xs mb-1.5" style="color: var(--muted)">Tastenkürzel</div>
-      <div class="text-xs space-y-1" style="color: var(--muted)">
-        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">M</kbd> Mikrofon</div>
-        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">V</kbd> Kamera</div>
-        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">H</kbd> Hand</div>
-        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">C</kbd> Chat</div>
-        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">F</kbd> Fokus-Ansicht</div>
+      <div class="text-xs mb-1.5" style="color:var(--muted)">Tastenkürzel</div>
+      <div class="text-xs space-y-1" style="color:var(--muted)">
+        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">M</kbd> Mikrofon · <kbd class="px-1.5 py-0.5 rounded glass text-[10px]">V</kbd> Kamera</div>
+        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">H</kbd> Hand · <kbd class="px-1.5 py-0.5 rounded glass text-[10px]">C</kbd> Chat · <kbd class="px-1.5 py-0.5 rounded glass text-[10px]">F</kbd> Fokus</div>
+        <div><kbd class="px-1.5 py-0.5 rounded glass text-[10px]">R</kbd> Aufnahme · <kbd class="px-1.5 py-0.5 rounded glass text-[10px]">Esc</kbd> Schließen</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Context Menu -->
 <div id="contextMenu" class="panel-hidden fixed z-50 w-48 rounded-2xl panel py-1.5 text-sm">
   <button onclick="ctxAction('toggle')" class="w-full text-left px-4 py-2.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl mx-1">An / Aus</button>
   <button onclick="ctxAction('settings')" class="w-full text-left px-4 py-2.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl mx-1">Einstellungen…</button>
 </div>
 
 <div id="toasts" class="fixed bottom-32 right-3 sm:right-5 z-50 space-y-2 pointer-events-none"></div>
+<div id="recBadge" class="hidden fixed top-20 left-1/2 -translate-x-1/2 z-50 px-3 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold flex items-center gap-2">
+  <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> REC
+</div>
 
 <script>
 const $ = i => document.getElementById(i);
 const MAX = 8;
 const PFX = 'filoumeet-';
-const EM = ['👍','❤️','👏','🔥','🎉','💡','😂','🙌'];
-const ICE = { 
+const EM = ['👍','❤️','👏','🔥','🎉','💡','😂','🙌','😮','😢','👀','🚀'];
+const ICE = {
   iceServers: [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:stun1.l.google.com:19302' },
-    { urls: 'stun:stun2.l.google.com:19302' }
-  ] 
+    { urls: 'stun:stun2.l.google.com:19302' },
+    { urls: 'stun:stun3.l.google.com:19302' }
+  ]
 };
 const AVATAR_COLORS = ['#3b82f6','#22c55e','#eab308','#ef4444','#a855f7','#f97316','#06b6d4','#84cc16','#ec4899','#8b5cf6'];
+const QUALITY = {
+  low:    { w: 480, h: 360, ideal: 480 },
+  medium: { w: 960, h: 540, ideal: 960 },
+  high:   { w: 1280, h: 720, ideal: 1280 }
+};
 
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1);
 
 const S = {
   view: 'home', name: localStorage.fm_name || '', room: '', slot: -1, isHost: false,
-  peer: null, stream: null, mic: true, cam: true, hand: false, sharing: null, mirror: localStorage.fm_mirror !== '0',
-  links: {}, calls: {}, info: {}, seen: new Set(), meters: {}, unread: 0, ac: null, timer: null,
-  myColor: null, roomPass: '', ctxType: null, mediaReady: false,
+  peer: null, stream: null, mic: true, cam: true, hand: false, sharing: null,
+  mirror: localStorage.fm_mirror !== '0',
+  noise: localStorage.fm_noise !== '0',
+  sounds: localStorage.fm_sounds !== '0',
+  quality: localStorage.fm_quality || 'medium',
+  links: {}, calls: {}, info: {}, seen: new Set(), meters: {}, unread: 0,
+  ac: null, timer: null, statsTimer: null, hideTimer: null,
+  myColor: null, roomPass: '', ctxType: null,
   devices: { video: [], audio: [], speaker: [] },
   selected: { video: localStorage.fm_cam || '', audio: localStorage.fm_mic || '', speaker: localStorage.fm_speaker || '' },
-  focusMode: false
+  focusMode: false, pinned: null,
+  recorder: null, recChunks: [], recording: false
 };
 
 const pid = j => PFX + S.room + '-' + j;
@@ -536,22 +539,42 @@ function toast(m, type = 'info') {
   t.className = `px-4 py-3 rounded-2xl text-sm font-medium animate-fade-up ${type === 'error' ? 'bg-red-500 text-white' : 'panel'}`;
   t.textContent = m;
   $('toasts').appendChild(t);
-  setTimeout(() => t.remove(), 3200);
+  setTimeout(() => t.remove(), 3000);
 }
-function setStatus(t, ok = true) { 
-  $('status').textContent = t; 
+function setStatus(t, ok = true) {
+  $('status').textContent = t;
   const dot = $('statusDot');
   if (dot) dot.className = `w-1.5 h-1.5 rounded-full ${ok ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`;
 }
 function show(v) {
   S.view = v;
   ['home','lobby','room'].forEach(x => $(x).classList.toggle('hidden', x !== v));
+  if (v === 'room') startHideControls();
+  else clearTimeout(S.hideTimer);
 }
 
-/* ========== DEVICE MANAGEMENT ========== */
+/* ========== CONTROLS AUTO-HIDE ========== */
+function startHideControls() {
+  clearTimeout(S.hideTimer);
+  $('room').classList.remove('controls-hidden');
+  S.hideTimer = setTimeout(() => {
+    if (S.view === 'room' && !$('drawer').classList.contains('translate-x-full') === false) {
+      // only hide if chat closed and no panel open
+      if ($('settingsPanel').classList.contains('panel-hidden') &&
+          $('participantsPanel').classList.contains('panel-hidden') &&
+          $('emojis').classList.contains('hidden')) {
+        $('room').classList.add('controls-hidden');
+      }
+    }
+  }, 4000);
+}
+['mousemove','touchstart','keydown'].forEach(ev => {
+  document.addEventListener(ev, () => { if (S.view === 'room') startHideControls(); }, { passive: true });
+});
+
+/* ========== DEVICES ========== */
 async function refreshDevices() {
   try {
-    // Need permission first for labels
     if (!S.stream) {
       try {
         const tmp = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -562,11 +585,9 @@ async function refreshDevices() {
     S.devices.video = devices.filter(d => d.kind === 'videoinput');
     S.devices.audio = devices.filter(d => d.kind === 'audioinput');
     S.devices.speaker = devices.filter(d => d.kind === 'audiooutput');
-
     fillDeviceSelects();
     toast('Geräte aktualisiert');
   } catch (e) {
-    console.warn(e);
     toast('Geräte konnten nicht geladen werden', 'error');
   }
 }
@@ -579,10 +600,8 @@ function fillDeviceSelects() {
     el.innerHTML = '';
     if (!list.length) {
       const o = document.createElement('option');
-      o.value = '';
-      o.textContent = placeholder || 'Kein Gerät';
-      el.appendChild(o);
-      return;
+      o.value = ''; o.textContent = placeholder || 'Kein Gerät';
+      el.appendChild(o); return;
     }
     list.forEach((d, i) => {
       const o = document.createElement('option');
@@ -590,93 +609,64 @@ function fillDeviceSelects() {
       o.textContent = d.label || `${placeholder || 'Gerät'} ${i + 1}`;
       el.appendChild(o);
     });
-    // Restore selection
     const want = selected || prev;
     if (want && [...el.options].some(o => o.value === want)) el.value = want;
     else if (list[0]) el.value = list[0].deviceId;
   };
-
   fill('setCam', S.devices.video, S.selected.video, 'Kamera');
   fill('setMic', S.devices.audio, S.selected.audio, 'Mikrofon');
   fill('lobCam', S.devices.video, S.selected.video, 'Kamera');
   fill('lobMic', S.devices.audio, S.selected.audio, 'Mikrofon');
-
-  const sp = $('setSpeaker');
-  const wrap = $('speakerWrap');
+  const sp = $('setSpeaker'), wrap = $('speakerWrap');
   if (sp && wrap) {
-    // setSinkId support check
     const support = typeof HTMLMediaElement !== 'undefined' && 'setSinkId' in HTMLMediaElement.prototype;
-    if (!support || isIOS) {
-      wrap.classList.add('hidden');
-    } else {
-      wrap.classList.remove('hidden');
-      fill('setSpeaker', S.devices.speaker, S.selected.speaker, 'Lautsprecher');
-    }
+    if (!support || isIOS) wrap.classList.add('hidden');
+    else { wrap.classList.remove('hidden'); fill('setSpeaker', S.devices.speaker, S.selected.speaker, 'Lautsprecher'); }
   }
+  // quality selects
+  ['setQuality','lobQuality'].forEach(id => {
+    const el = $(id);
+    if (el) el.value = S.quality;
+  });
 }
 
 async function switchDevice(kind, deviceId) {
   if (!deviceId) return;
   S.selected[kind] = deviceId;
   localStorage['fm_' + (kind === 'video' ? 'cam' : 'mic')] = deviceId;
-
-  if (!S.stream) {
-    // Just store preference, will be used on next getMedia
-    fillDeviceSelects();
-    return;
-  }
+  if (!S.stream) { fillDeviceSelects(); return; }
 
   try {
+    const q = QUALITY[S.quality] || QUALITY.medium;
     const constraints = kind === 'video'
-      ? { video: { deviceId: { exact: deviceId }, width: { ideal: isMobile ? 640 : 1280 }, height: { ideal: isMobile ? 480 : 720 } }, audio: false }
-      : { audio: { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false };
+      ? { video: { deviceId: { exact: deviceId }, width: { ideal: isMobile ? Math.min(q.ideal, 640) : q.ideal }, height: { ideal: isMobile ? 480 : q.h } }, audio: false }
+      : { audio: { deviceId: { exact: deviceId }, echoCancellation: true, noiseSuppression: S.noise, autoGainControl: true }, video: false };
 
     const newStream = await navigator.mediaDevices.getUserMedia(constraints);
     const newTrack = newStream.getTracks()[0];
     const oldTrack = S.stream.getTracks().find(t => t.kind === kind);
-
-    if (oldTrack) {
-      oldTrack.stop();
-      S.stream.removeTrack(oldTrack);
-    }
+    if (oldTrack) { oldTrack.stop(); S.stream.removeTrack(oldTrack); }
     S.stream.addTrack(newTrack);
 
-    // Update local previews
-    const prev = $('prev');
-    if (prev && kind === 'video') {
-      prev.srcObject = S.stream;
-      prev.play().catch(() => {});
-    }
-    const meVideo = $('tile-me')?.querySelector('video');
-    if (meVideo && kind === 'video' && !S.sharing) {
-      meVideo.srcObject = S.stream;
-      meVideo.play().catch(() => {});
-      applyMirror();
+    if (kind === 'video') {
+      const prev = $('prev');
+      if (prev) { prev.srcObject = S.stream; prev.play().catch(()=>{}); }
+      const meVideo = $('tile-me')?.querySelector('video');
+      if (meVideo && !S.sharing) { meVideo.srcObject = S.stream; meVideo.play().catch(()=>{}); applyMirror(); }
     }
 
-    // Replace track in all peer connections
     Object.values(S.calls).forEach(c => {
       const pc = c.peerConnection;
       if (!pc) return;
       const sender = pc.getSenders().find(s => s.track && s.track.kind === kind);
-      if (sender) {
-        try { sender.replaceTrack(newTrack); } catch(e) { console.warn(e); }
-      }
+      if (sender) try { sender.replaceTrack(newTrack); } catch(e) {}
     });
 
-    // Re-apply enabled state
     newTrack.enabled = kind === 'video' ? S.cam : S.mic;
-
-    // Restart meter if audio
-    if (kind === 'audio') {
-      clearInterval(S.meters['me']);
-      meter('me', S.stream);
-    }
-
+    if (kind === 'audio') { clearInterval(S.meters['me']); meter('me', S.stream); }
     fillDeviceSelects();
     toast(kind === 'video' ? 'Kamera gewechselt' : 'Mikrofon gewechselt');
   } catch (e) {
-    console.error(e);
     toast('Gerätewechsel fehlgeschlagen', 'error');
   }
 }
@@ -685,12 +675,39 @@ async function switchSpeaker(deviceId) {
   if (!deviceId) return;
   S.selected.speaker = deviceId;
   localStorage.fm_speaker = deviceId;
-  // Apply to all remote videos
   document.querySelectorAll('#grid video').forEach(async v => {
-    if (v.id === 'tile-me' || !v.setSinkId) return;
+    if (!v.setSinkId) return;
     try { await v.setSinkId(deviceId); } catch(e) {}
   });
   toast('Lautsprecher gewechselt');
+}
+
+async function setQuality(q) {
+  S.quality = q;
+  localStorage.fm_quality = q;
+  ['setQuality','lobQuality'].forEach(id => { if ($(id)) $(id).value = q; });
+  // Re-apply video constraints if possible
+  if (S.stream && S.selected.video) {
+    try { await switchDevice('video', S.selected.video); } catch(e) {}
+  }
+  toast('Qualität: ' + ({ low: 'Niedrig', medium: 'Mittel', high: 'Hoch' }[q] || q));
+}
+
+function toggleNoise() {
+  S.noise = !S.noise;
+  localStorage.fm_noise = S.noise ? '1' : '0';
+  const btn = $('noiseBtn');
+  btn.style.background = S.noise ? 'var(--accent)' : 'rgba(128,128,128,.25)';
+  btn.querySelector('span').style.left = S.noise ? '18px' : '2px';
+  if (S.selected.audio) switchDevice('audio', S.selected.audio);
+  toast(S.noise ? 'Rauschunterdrückung an' : 'Rauschunterdrückung aus');
+}
+function toggleSounds() {
+  S.sounds = !S.sounds;
+  localStorage.fm_sounds = S.sounds ? '1' : '0';
+  const btn = $('soundBtn');
+  btn.style.background = S.sounds ? 'var(--accent)' : 'rgba(128,128,128,.25)';
+  btn.querySelector('span').style.left = S.sounds ? '18px' : '2px';
 }
 
 /* Settings UI */
@@ -700,56 +717,45 @@ function togglePanel(id) {
   document.querySelectorAll('#settingsPanel, #participantsPanel').forEach(el => el.classList.add('panel-hidden'));
   if (wasHidden) {
     p.classList.remove('panel-hidden');
-    if (id === 'settingsPanel') {
-      $('setName').value = S.name;
-      fillDeviceSelects();
-    }
+    if (id === 'settingsPanel') { $('setName').value = S.name; fillDeviceSelects(); }
     if (id === 'participantsPanel') renderParticipants();
+    startHideControls();
   }
 }
 function setTheme(mode) {
   localStorage.fm_theme = mode;
   const isLight = mode === 'light' || (mode === 'system' && window.matchMedia('(prefers-color-scheme: light)').matches);
   document.body.classList.toggle('light', isLight);
-  ['thSystem','thDark','thLight'].forEach(id => {
-    $(id).style.background = 'transparent';
-    $(id).style.color = 'var(--text)';
-  });
+  ['thSystem','thDark','thLight'].forEach(id => { $(id).style.background = 'transparent'; $(id).style.color = 'var(--text)'; });
   const active = mode === 'system' ? 'thSystem' : mode === 'dark' ? 'thDark' : 'thLight';
-  $(active).style.background = 'var(--accent)';
-  $(active).style.color = 'white';
+  $(active).style.background = 'var(--accent)'; $(active).style.color = 'white';
 }
 function setAccent(color, rgb) {
   document.documentElement.style.setProperty('--accent', color);
   document.documentElement.style.setProperty('--accent-rgb', rgb);
-  localStorage.fm_accent = color;
-  localStorage.fm_accent_rgb = rgb;
+  localStorage.fm_accent = color; localStorage.fm_accent_rgb = rgb;
 }
 function toggleMirror() {
   S.mirror = !S.mirror;
   localStorage.fm_mirror = S.mirror ? '1' : '0';
   applyMirror();
   const btn = $('mirrorBtn');
-  btn.style.background = S.mirror ? 'var(--accent)' : 'rgba(128,128,128,0.25)';
+  btn.style.background = S.mirror ? 'var(--accent)' : 'rgba(128,128,128,.25)';
   btn.querySelector('span').style.left = S.mirror ? '18px' : '2px';
 }
 function applyMirror() {
   const prev = $('prev');
-  const me = $('tile-me') && $('tile-me').querySelector('video');
+  const me = $('tile-me')?.querySelector('video');
   if (prev) prev.classList.toggle('mirror', S.mirror);
   if (me && !S.sharing) me.classList.toggle('mirror', S.mirror);
 }
-(function() {
+(function initPrefs() {
   setTheme(localStorage.fm_theme || 'system');
   if (localStorage.fm_accent) setAccent(localStorage.fm_accent, localStorage.fm_accent_rgb || '59,130,246');
-  if (S.mirror) {
-    $('mirrorBtn').style.background = 'var(--accent)';
-    $('mirrorBtn').querySelector('span').style.left = '18px';
-  }
-  if (isIOS) {
-    $('bShare')?.classList.add('hidden');
-    $('bPip')?.classList.add('hidden');
-  }
+  if (S.mirror) { $('mirrorBtn').style.background = 'var(--accent)'; $('mirrorBtn').querySelector('span').style.left = '18px'; }
+  if (!S.noise) { $('noiseBtn').style.background = 'rgba(128,128,128,.25)'; $('noiseBtn').querySelector('span').style.left = '2px'; }
+  if (!S.sounds) { $('soundBtn').style.background = 'rgba(128,128,128,.25)'; $('soundBtn').querySelector('span').style.left = '2px'; }
+  if (isIOS) { $('bShare')?.classList.add('hidden'); $('bPip')?.classList.add('hidden'); }
 })();
 window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
   if ((localStorage.fm_theme || 'system') === 'system') setTheme('system');
@@ -770,7 +776,7 @@ function ctxAction(a) {
   else togglePanel('settingsPanel');
 }
 document.addEventListener('click', () => $('contextMenu').classList.add('panel-hidden'));
-document.addEventListener('touchstart', () => $('contextMenu').classList.add('panel-hidden'), {passive:true});
+document.addEventListener('touchstart', () => $('contextMenu').classList.add('panel-hidden'), { passive: true });
 
 /* Routing */
 function gen() {
@@ -813,19 +819,20 @@ function route() {
   }
 }
 window.addEventListener('hashchange', route);
-window.addEventListener('beforeunload', () => { if (S.peer) S.peer.destroy(); });
+window.addEventListener('beforeunload', () => { if (S.peer) S.peer.destroy(); if (S.recording) stopRecord(); });
 window.addEventListener('orientationchange', () => setTimeout(layout, 300));
 window.addEventListener('resize', () => layout());
 
 /* Media */
 async function getMedia() {
+  const q = QUALITY[S.quality] || QUALITY.medium;
   const videoConstraints = S.selected.video
-    ? { deviceId: { exact: S.selected.video }, width: { ideal: isMobile ? 640 : 1280 }, height: { ideal: isMobile ? 480 : 720 } }
-    : (isMobile ? { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } : { width: { ideal: 1280 }, height: { ideal: 720 } });
+    ? { deviceId: { exact: S.selected.video }, width: { ideal: isMobile ? Math.min(q.ideal, 640) : q.ideal }, height: { ideal: isMobile ? 480 : q.h } }
+    : (isMobile ? { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } : { width: { ideal: q.ideal }, height: { ideal: q.h } });
 
   const audioConstraints = S.selected.audio
-    ? { deviceId: { exact: S.selected.audio }, echoCancellation: true, noiseSuppression: true, autoGainControl: true }
-    : { echoCancellation: true, noiseSuppression: true, autoGainControl: true };
+    ? { deviceId: { exact: S.selected.audio }, echoCancellation: true, noiseSuppression: S.noise, autoGainControl: true }
+    : { echoCancellation: true, noiseSuppression: S.noise, autoGainControl: true };
 
   const tries = [
     { video: videoConstraints, audio: audioConstraints },
@@ -834,34 +841,25 @@ async function getMedia() {
     { video: false, audio: true },
     { video: true, audio: false }
   ];
-
   for (const c of tries) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia(c);
-      // Remember actual selected devices
       const vTrack = stream.getVideoTracks()[0];
       const aTrack = stream.getAudioTracks()[0];
       if (vTrack) S.selected.video = vTrack.getSettings().deviceId || S.selected.video;
       if (aTrack) S.selected.audio = aTrack.getSettings().deviceId || S.selected.audio;
       return stream;
-    } catch (e) {
-      console.warn('getUserMedia failed', c, e);
-    }
+    } catch (e) { console.warn(e); }
   }
   return new MediaStream();
 }
-
 function stopMedia() {
   if (S.stream) S.stream.getTracks().forEach(t => t.stop());
   S.stream = null;
-  S.mediaReady = false;
 }
-
 async function ensureAudioContext() {
   if (!S.ac) S.ac = new (window.AudioContext || window.webkitAudioContext)();
-  if (S.ac.state === 'suspended') {
-    try { await S.ac.resume(); } catch(e) {}
-  }
+  if (S.ac.state === 'suspended') try { await S.ac.resume(); } catch(e) {}
 }
 
 async function toLobby() {
@@ -869,32 +867,22 @@ async function toLobby() {
   $('lobRoom').textContent = S.room;
   $('lobName').value = S.name;
   $('passField').classList.toggle('hidden', !S.roomPass);
-
   if (!S.stream) {
     try {
       S.stream = await getMedia();
       S.mic = S.stream.getAudioTracks().length > 0;
       S.cam = S.stream.getVideoTracks().length > 0;
-      S.mediaReady = true;
       if (!S.stream.getTracks().length) toast('Keine Kamera/Mikrofon gefunden', 'error');
-    } catch (err) {
-      toast('Medienzugriff fehlgeschlagen', 'error');
-    }
+    } catch (err) { toast('Medienzugriff fehlgeschlagen', 'error'); }
   }
-
   await refreshDevices();
-
   const prev = $('prev');
   if (prev && S.stream) {
-    prev.srcObject = S.stream;
-    prev.muted = true;
-    prev.playsInline = true;
-    prev.setAttribute('playsinline', '');
-    prev.setAttribute('webkit-playsinline', '');
-    prev.play().catch(() => {});
+    prev.srcObject = S.stream; prev.muted = true;
+    prev.playsInline = true; prev.setAttribute('playsinline',''); prev.setAttribute('webkit-playsinline','');
+    prev.play().catch(()=>{});
   }
-  applyMirror();
-  syncBtns();
+  applyMirror(); syncBtns();
 }
 
 function tog(k) {
@@ -905,7 +893,6 @@ function tog(k) {
   syncBtns();
   if (S.view === 'room') { upd('me'); bc({ t: 'st', ...mine() }); updateEmpty(); }
 }
-
 function syncBtns() {
   document.querySelectorAll('.b-mic').forEach(b => {
     b.classList.toggle('muted', !S.mic);
@@ -926,23 +913,47 @@ function mkTile(j, isNew = false) {
   t.className = 'tile relative aspect-video flex items-center justify-center' + (isNew ? ' animate-pop-in' : '');
   t.innerHTML = `
     <video autoplay playsinline muted webkit-playsinline class="w-full h-full object-cover absolute inset-0"></video>
-    <div class="av absolute inset-0 flex items-center justify-center" style="background: var(--bg-elevated)">
-      <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-full text-white text-3xl sm:text-4xl font-semibold flex items-center justify-center shadow-lg ring-4 ring-black/5"></div>
+    <div class="av absolute inset-0 flex items-center justify-center" style="background:var(--bg-elevated)">
+      <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-full text-white text-3xl sm:text-4xl font-semibold flex items-center justify-center shadow-lg"></div>
     </div>
-    <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 tile-label px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs text-white flex items-center gap-1.5 sm:gap-2 z-10">
+    <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 tile-label px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs text-white flex items-center gap-1.5 z-10">
       <i class="hand fa-solid fa-hand text-amber-400 hidden"></i>
-      <span class="nm font-medium truncate max-w-[100px] sm:max-w-[140px]"></span>
+      <span class="nm font-medium truncate max-w-[90px] sm:max-w-[140px]"></span>
       <i class="mic fa-solid text-[10px]"></i>
-    </div>`;
+    </div>
+    <button class="pin-btn absolute top-2 right-2 w-8 h-8 rounded-full glass flex items-center justify-center text-xs opacity-0 hover:opacity-100 transition z-10" title="Anpinnen">
+      <i class="fa-solid fa-thumbtack"></i>
+    </button>`;
   const video = t.querySelector('video');
   video.muted = (j === 'me');
   video.playsInline = true;
-  video.setAttribute('playsinline', '');
-  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('playsinline',''); video.setAttribute('webkit-playsinline','');
+  t.querySelector('.pin-btn').onclick = (e) => { e.stopPropagation(); pinParticipant(j); };
+  t.onmouseenter = () => t.querySelector('.pin-btn').style.opacity = '1';
+  t.onmouseleave = () => { if (S.pinned !== j) t.querySelector('.pin-btn').style.opacity = '0'; };
   $('grid').appendChild(t);
-  layout();
-  updateEmpty();
+  layout(); updateEmpty();
   return t;
+}
+
+function pinParticipant(j) {
+  if (S.pinned === j) {
+    S.pinned = null;
+    $('grid').classList.remove('pin-mode');
+    document.querySelectorAll('.tile').forEach(t => t.classList.remove('is-pinned','pinned'));
+    layout();
+    toast('Pin entfernt');
+  } else {
+    S.pinned = j;
+    S.focusMode = false;
+    $('grid').classList.remove('focus-mode');
+    $('grid').classList.add('pin-mode');
+    document.querySelectorAll('.tile').forEach(t => {
+      t.classList.toggle('is-pinned', t.id === 'tile-' + j);
+      t.classList.toggle('pinned', t.id === 'tile-' + j);
+    });
+    toast('Angepinnt');
+  }
 }
 
 function upd(j) {
@@ -962,52 +973,38 @@ function upd(j) {
 }
 
 function layout() {
-  if (S.focusMode) return;
+  if (S.focusMode || S.pinned) return;
   const n = $('grid').children.length;
   const w = innerWidth;
-  let c;
-  if (w < 480) c = n < 3 ? 1 : 2;
-  else if (w < 900) c = n < 2 ? 1 : n < 5 ? 2 : 3;
-  else c = n < 2 ? 1 : n < 5 ? 2 : 3;
+  let c = w < 480 ? (n < 3 ? 1 : 2) : w < 900 ? (n < 2 ? 1 : n < 5 ? 2 : 3) : (n < 2 ? 1 : n < 5 ? 2 : 3);
   $('grid').style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
   $('count').textContent = n;
 }
-
 function updateEmpty() {
-  const n = $('grid').children.length;
-  $('emptyState').classList.toggle('hidden', n > 1);
+  $('emptyState').classList.toggle('hidden', $('grid').children.length > 1);
 }
 
 function addTile(j, s) {
   const t = mkTile(j, true);
   const video = t.querySelector('video');
-  video.srcObject = s;
-  video.muted = false;
-  video.play().catch(() => {});
-  // Apply preferred speaker if available
-  if (S.selected.speaker && video.setSinkId) {
-    video.setSinkId(S.selected.speaker).catch(() => {});
-  }
-  meter(j, s);
-  upd(j);
+  video.srcObject = s; video.muted = false; video.play().catch(()=>{});
+  if (S.selected.speaker && video.setSinkId) video.setSinkId(S.selected.speaker).catch(()=>{});
+  meter(j, s); upd(j);
 }
-
 function dropTile(j) {
+  if (S.pinned === j) { S.pinned = null; $('grid').classList.remove('pin-mode'); }
   const t = $('tile-' + j);
   if (t) {
-    t.style.transition = 'all 0.35s ease';
-    t.style.opacity = '0';
-    t.style.transform = 'scale(0.9)';
-    setTimeout(() => t.remove(), 320);
+    t.style.transition = 'all .3s'; t.style.opacity = '0'; t.style.transform = 'scale(.9)';
+    setTimeout(() => t.remove(), 300);
   }
-  clearInterval(S.meters[j]);
-  delete S.meters[j];
-  const n = S.info[j] && S.info[j].name;
+  clearInterval(S.meters[j]); delete S.meters[j];
+  const n = S.info[j]?.name;
   delete S.info[j];
   if (S.calls[j]) { try { S.calls[j].close(); } catch(e){} delete S.calls[j]; }
   if (S.links[j]) { try { S.links[j].close(); } catch(e){} delete S.links[j]; }
-  setTimeout(() => { layout(); updateEmpty(); }, 320);
-  if (n) toast(n + ' hat den Raum verlassen');
+  setTimeout(() => { layout(); updateEmpty(); }, 300);
+  if (n) { toast(n + ' hat den Raum verlassen'); playSound('leave'); }
   renderParticipants();
 }
 
@@ -1016,8 +1013,7 @@ function meter(j, s) {
   try {
     ensureAudioContext().then(() => {
       if (!S.ac) return;
-      const an = S.ac.createAnalyser();
-      an.fftSize = 256;
+      const an = S.ac.createAnalyser(); an.fftSize = 256;
       S.ac.createMediaStreamSource(s).connect(an);
       const d = new Uint8Array(an.frequencyBinCount);
       clearInterval(S.meters[j]);
@@ -1030,52 +1026,104 @@ function meter(j, s) {
           t.classList.toggle('speak', speaking);
           t.classList.toggle('is-speaking', speaking);
         }
-      }, 200);
+      }, 180);
     });
   } catch(e) {}
 }
 
-/* Participants */
+/* Participants with host mute */
 function renderParticipants() {
   const list = $('partList');
   list.innerHTML = '';
-  const me = document.createElement('div');
-  me.className = 'flex items-center gap-3 p-2 rounded-xl';
-  me.innerHTML = `
-    <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium" style="background:${S.myColor}">${(S.name||'?')[0].toUpperCase()}</div>
-    <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">${S.name} (Du)${S.isHost ? ' 👑' : ''}</div></div>
-    <i class="fa-solid ${S.mic ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-red-400'} text-xs"></i>`;
-  list.appendChild(me);
-  Object.entries(S.info).forEach(([j, i]) => {
+  const addRow = (j, i, isMe) => {
     const d = document.createElement('div');
     d.className = 'flex items-center gap-3 p-2 rounded-xl';
     d.innerHTML = `
       <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium" style="background:${i.color||'#3b82f6'}">${(i.name||'?')[0].toUpperCase()}</div>
-      <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">${i.name}${i.host ? ' 👑' : ''}</div></div>
-      <i class="fa-solid ${i.mic ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-red-400'} text-xs"></i>`;
+      <div class="flex-1 min-w-0"><div class="text-sm font-medium truncate">${i.name}${isMe?' (Du)':''}${i.host?' 👑':''}</div></div>
+      <i class="fa-solid ${i.mic ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-red-400'} text-xs"></i>
+      ${!isMe && S.isHost ? `<button onclick="muteOne('${j}')" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-xs" title="Stummschalten"><i class="fa-solid fa-microphone-slash"></i></button>` : ''}
+      ${!isMe ? `<button onclick="pinParticipant('${j}')" class="w-7 h-7 rounded-lg glass flex items-center justify-center text-xs" title="Anpinnen"><i class="fa-solid fa-thumbtack"></i></button>` : ''}`;
     list.appendChild(d);
-  });
+  };
+  addRow('me', mine(), true);
+  Object.entries(S.info).forEach(([j, i]) => addRow(j, i, false));
   $('hostActions').classList.toggle('hidden', !S.isHost);
 }
+function muteOne(j) {
+  if (!S.isHost) return;
+  const c = S.links[j];
+  if (c?.open) c.send({ t: 'mute', force: true, id: Math.random().toString(36).slice(2) });
+  toast('Stummschaltung gesendet');
+}
 
-/* Focus mode */
+/* Focus */
 function toggleFocusMode() {
   S.focusMode = !S.focusMode;
+  if (S.focusMode) { S.pinned = null; $('grid').classList.remove('pin-mode'); document.querySelectorAll('.tile').forEach(t => t.classList.remove('is-pinned','pinned')); }
   $('grid').classList.toggle('focus-mode', S.focusMode);
-  $('bFocus').classList.toggle('muted', S.focusMode);
+  $('bFocus').classList.toggle('active-feature', S.focusMode);
   if (!S.focusMode) layout();
-  toast(S.focusMode ? 'Fokus-Ansicht aktiv' : 'Grid-Ansicht');
+  toast(S.focusMode ? 'Fokus-Ansicht' : 'Grid-Ansicht');
+}
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.() || document.documentElement.webkitRequestFullscreen?.();
+  else document.exitFullscreen?.() || document.webkitExitFullscreen?.();
 }
 
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen?.() || document.documentElement.webkitRequestFullscreen?.();
-  } else {
-    document.exitFullscreen?.() || document.webkitExitFullscreen?.();
+/* Recording */
+function toggleRecord() {
+  if (S.recording) stopRecord();
+  else startRecord();
+}
+async function startRecord() {
+  try {
+    // Mix local + remote is hard without AudioContext mix; record local canvas or just local stream for simplicity
+    // Better: capture the whole grid via canvas is complex. Record own stream + note.
+    // Practical approach: use MediaRecorder on a combined stream if possible, else local.
+    const tracks = [];
+    if (S.stream) S.stream.getTracks().forEach(t => tracks.push(t));
+    // Add remote audio tracks for a better recording
+    Object.values(S.calls).forEach(c => {
+      // remote streams are on tiles
+    });
+    document.querySelectorAll('#grid video').forEach(v => {
+      if (v.srcObject) v.srcObject.getAudioTracks().forEach(t => { if (!tracks.includes(t)) tracks.push(t); });
+    });
+    const recStream = new MediaStream(tracks);
+    S.recChunks = [];
+    const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus') ? 'video/webm;codecs=vp9,opus'
+      : MediaRecorder.isTypeSupported('video/webm') ? 'video/webm' : '';
+    S.recorder = new MediaRecorder(recStream, mime ? { mimeType: mime } : undefined);
+    S.recorder.ondataavailable = e => { if (e.data.size) S.recChunks.push(e.data); };
+    S.recorder.onstop = () => {
+      const blob = new Blob(S.recChunks, { type: 'video/webm' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `filoumeet-${S.room}-${Date.now()}.webm`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast('Aufnahme gespeichert');
+    };
+    S.recorder.start(1000);
+    S.recording = true;
+    $('bRec').classList.add('active-feature');
+    $('recBadge').classList.remove('hidden');
+    toast('Aufnahme gestartet');
+  } catch (e) {
+    toast('Aufnahme nicht möglich', 'error');
   }
 }
+function stopRecord() {
+  if (!S.recorder) return;
+  S.recorder.stop();
+  S.recording = false;
+  S.recorder = null;
+  $('bRec').classList.remove('active-feature');
+  $('recBadge').classList.add('hidden');
+}
 
-/* Join */
+/* Join / Peer */
 function join() {
   if (S.roomPass && $('lobPass').value !== S.roomPass) return toast('Falsches Passwort', 'error');
   S.name = ($('lobName').value.trim() || 'Gast').slice(0, 24);
@@ -1085,17 +1133,13 @@ function join() {
   show('room');
   $('roomCode').textContent = S.room;
   setStatus('Verbinde…', false);
-  S.slot = -1; S.links = {}; S.calls = {}; S.info = {}; S.seen = new Set(); S.isHost = false;
+  S.slot = -1; S.links = {}; S.calls = {}; S.info = {}; S.seen = new Set(); S.isHost = false; S.pinned = null;
   $('grid').innerHTML = ''; $('msgs').innerHTML = '';
+  $('grid').classList.remove('focus-mode','pin-mode');
   const t = mkTile('me');
   const video = t.querySelector('video');
-  video.srcObject = S.stream;
-  video.muted = true;
-  video.play().catch(() => {});
-  meter('me', S.stream);
-  applyMirror();
-  upd('me');
-  syncBtns();
+  video.srcObject = S.stream; video.muted = true; video.play().catch(()=>{});
+  meter('me', S.stream); applyMirror(); upd('me'); syncBtns();
   claim(0);
 }
 
@@ -1110,6 +1154,7 @@ function claim(i) {
     setStatus('Verbunden', true);
     probe();
     S.timer = setInterval(probe, 3500);
+    S.statsTimer = setInterval(updateNetStats, 5000);
     renderParticipants();
   });
   p.on('error', e => {
@@ -1120,15 +1165,14 @@ function claim(i) {
     }
   });
 }
-
 function setup(p) {
   p.on('connection', c => {
-    const j = c.metadata && c.metadata.slot;
+    const j = c.metadata?.slot;
     if (!(Number.isInteger(j) && j >= 0 && j < MAX && j !== S.slot)) return c.close();
     reg(j, c);
   });
   p.on('call', c => {
-    const j = c.metadata && c.metadata.slot;
+    const j = c.metadata?.slot;
     if (!(Number.isInteger(j) && j >= 0 && j < MAX && j !== S.slot)) return c.close();
     c.answer(S.stream);
     hookCall(j, c);
@@ -1138,7 +1182,6 @@ function setup(p) {
     if (!p.destroyed) try { p.reconnect(); } catch(e) {}
   });
 }
-
 function probe() {
   if (!S.peer || S.peer.destroyed) return;
   for (let j = 0; j < MAX; j++) {
@@ -1148,16 +1191,14 @@ function probe() {
       if (l) { try { l.close(); } catch(e){} delete S.links[j]; }
       try {
         const c = S.peer.connect(pid(j), { reliable: true, metadata: { slot: S.slot } });
-        c.initiated = true;
-        reg(j, c);
+        c.initiated = true; reg(j, c);
       } catch(e) {}
     } else if (l.open && l.initiated && !S.calls[j]) callPeer(j);
   }
 }
-
 function reg(j, c) {
   const old = S.links[j];
-  if (old && old !== c) { try { old.close(); } catch(e){} }
+  if (old && old !== c) try { old.close(); } catch(e){}
   S.links[j] = c;
   c.on('open', () => {
     if (S.links[j] !== c) return c.close();
@@ -1168,12 +1209,10 @@ function reg(j, c) {
   c.on('close', () => { if (S.links[j] === c) { delete S.links[j]; dropTile(j); } });
   c.on('error', () => { if (S.links[j] === c) { delete S.links[j]; dropTile(j); } });
 }
-
 function callPeer(j) {
   if (!S.peer || S.peer.destroyed || S.calls[j]) return;
   try { hookCall(j, S.peer.call(pid(j), S.stream, { metadata: { slot: S.slot } })); } catch(e) {}
 }
-
 function hookCall(j, c) {
   const o = S.calls[j];
   S.calls[j] = c;
@@ -1183,12 +1222,39 @@ function hookCall(j, c) {
   c.on('error', () => { if (S.calls[j] === c) delete S.calls[j]; });
 }
 
+/* Simple network quality from peer connections */
+async function updateNetStats() {
+  let total = 0, bad = 0, samples = 0;
+  for (const c of Object.values(S.calls)) {
+    const pc = c.peerConnection;
+    if (!pc) continue;
+    try {
+      const stats = await pc.getStats();
+      stats.forEach(r => {
+        if (r.type === 'inbound-rtp' && r.kind === 'video') {
+          samples++;
+          if (r.packetsLost != null && r.packetsReceived != null) {
+            const loss = r.packetsLost / (r.packetsLost + r.packetsReceived + 1);
+            if (loss > 0.08) bad++;
+            else if (loss > 0.03) total += 0.5;
+          }
+        }
+      });
+    } catch(e) {}
+  }
+  const dot = $('netDot'), lab = $('netLabel');
+  if (!dot || !lab) return;
+  if (samples === 0) { dot.className = 'net-dot net-good'; lab.textContent = 'Gut'; return; }
+  if (bad > 0) { dot.className = 'net-dot net-bad'; lab.textContent = 'Schlecht'; }
+  else if (total > 0) { dot.className = 'net-dot net-mid'; lab.textContent = 'Mittel'; }
+  else { dot.className = 'net-dot net-good'; lab.textContent = 'Gut'; }
+}
+
 /* Data */
 function bc(m) {
   m.id = Math.random().toString(36).slice(2) + Date.now();
   Object.values(S.links).forEach(c => { if (c.open) try { c.send(m); } catch(e){} });
 }
-
 function onData(j, d) {
   if (!d || typeof d !== 'object') return;
   if (d.id) { if (S.seen.has(d.id)) return; S.seen.add(d.id); }
@@ -1202,19 +1268,16 @@ function onData(j, d) {
       color: d.color || i.color || randomColor(),
       host: !!d.host
     });
-    mkTile(j, first);
-    upd(j);
-    if (first) { toast(i.name + ' ist beigetreten'); playPop(); }
+    mkTile(j, first); upd(j);
+    if (first) { toast(i.name + ' ist beigetreten'); playSound('join'); playPop(); }
     renderParticipants();
-  } else if (d.t === 'chat') chat(i.name, String(d.text).slice(0, 500));
+  } else if (d.t === 'chat') { chat(i.name, String(d.text).slice(0, 500)); playSound('chat'); }
   else if (d.t === 're' && EM.includes(d.e)) { float(d.e); playPop(); }
   else if (d.t === 'mute' && !S.isHost) {
     if (d.force === true && S.mic) tog('audio');
     if (d.force === false && !S.mic) tog('audio');
   } else if (d.t === 'name') {
-    i.name = String(d.name || i.name).slice(0, 24);
-    upd(j);
-    renderParticipants();
+    i.name = String(d.name || i.name).slice(0, 24); upd(j); renderParticipants();
   }
 }
 
@@ -1222,13 +1285,9 @@ function onData(j, d) {
 function changeName() {
   const n = $('setName').value.trim().slice(0, 24);
   if (!n) return;
-  S.name = n;
-  localStorage.fm_name = n;
-  upd('me');
-  bc({ t: 'st', ...mine() });
-  bc({ t: 'name', name: n });
-  toast('Name geändert');
-  renderParticipants();
+  S.name = n; localStorage.fm_name = n;
+  upd('me'); bc({ t: 'st', ...mine() }); bc({ t: 'name', name: n });
+  toast('Name geändert'); renderParticipants();
 }
 function muteAll(force) {
   if (!S.isHost) return;
@@ -1238,64 +1297,72 @@ function muteAll(force) {
 function chat(who, text) {
   const m = document.createElement('div');
   m.className = 'space-y-0.5 animate-fade-up';
-  m.innerHTML = `<div class="text-xs" style="color: var(--muted)">${who} · ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+  m.innerHTML = `<div class="text-xs" style="color:var(--muted)">${who} · ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
     <div class="text-sm break-words">${text}</div>`;
   $('msgs').appendChild(m);
   $('msgs').scrollTop = 1e9;
   if ($('drawer').classList.contains('translate-x-full') && who !== 'Du') {
-    S.unread++;
-    $('unread').textContent = S.unread;
-    $('unread').classList.remove('hidden');
+    S.unread++; $('unread').textContent = S.unread; $('unread').classList.remove('hidden');
   }
 }
 function sendChat() {
   const v = $('chatIn').value.trim();
   if (!v) return;
   $('chatIn').value = '';
-  chat('Du', v);
-  bc({ t: 'chat', text: v });
+  chat('Du', v); bc({ t: 'chat', text: v });
 }
 function drawer(open) {
   $('drawer').classList.toggle('translate-x-full', !open);
   if (open) { S.unread = 0; $('unread').classList.add('hidden'); setTimeout(() => $('chatIn').focus(), 100); }
+  startHideControls();
 }
 EM.forEach(e => {
   const b = document.createElement('button');
   b.textContent = e;
-  b.className = 'w-11 h-11 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center justify-center active:scale-95';
+  b.className = 'w-11 h-11 rounded-full hover:bg-black/5 dark:hover:bg-white/10 flex items-center justify-center active:scale-95';
   b.onclick = () => { float(e); playPop(); bc({ t: 're', e }); $('emojis').classList.add('hidden'); };
   $('emojis').appendChild(b);
 });
 function float(e) {
   const d = document.createElement('div');
-  d.className = 'fl';
-  d.textContent = e;
+  d.className = 'fl'; d.textContent = e;
   d.style.left = (12 + Math.random() * 76) + '%';
   $('fx').appendChild(d);
-  setTimeout(() => d.remove(), 2500);
+  setTimeout(() => d.remove(), 2400);
 }
 function playPop() {
+  if (!S.sounds) return;
   try {
     ensureAudioContext().then(() => {
       if (!S.ac) return;
-      const o = S.ac.createOscillator();
-      const g = S.ac.createGain();
+      const o = S.ac.createOscillator(), g = S.ac.createGain();
       o.connect(g); g.connect(S.ac.destination);
-      o.frequency.value = 800;
-      g.gain.value = 0.06;
-      o.start();
-      g.gain.exponentialRampToValueAtTime(0.001, S.ac.currentTime + 0.13);
-      o.stop(S.ac.currentTime + 0.13);
+      o.frequency.value = 800; g.gain.value = 0.05;
+      o.start(); g.gain.exponentialRampToValueAtTime(0.001, S.ac.currentTime + 0.12);
+      o.stop(S.ac.currentTime + 0.12);
+    });
+  } catch(e) {}
+}
+function playSound(type) {
+  if (!S.sounds) return;
+  try {
+    ensureAudioContext().then(() => {
+      if (!S.ac) return;
+      const o = S.ac.createOscillator(), g = S.ac.createGain();
+      o.connect(g); g.connect(S.ac.destination);
+      const freqs = { join: 523, leave: 392, chat: 660, hand: 784 };
+      o.frequency.value = freqs[type] || 600;
+      g.gain.value = 0.04;
+      o.start(); g.gain.exponentialRampToValueAtTime(0.001, S.ac.currentTime + 0.15);
+      o.stop(S.ac.currentTime + 0.15);
     });
   } catch(e) {}
 }
 function hand() {
   S.hand = !S.hand;
-  $('bHand').classList.toggle('muted', S.hand);
-  if (S.hand) $('bHand').style.background = '#f59e0b';
-  else $('bHand').style.background = '';
-  upd('me');
-  bc({ t: 'st', ...mine() });
+  $('bHand').classList.toggle('active-feature', S.hand);
+  if (S.hand) playSound('hand');
+  upd('me'); bc({ t: 'st', ...mine() });
 }
 function swapVideo(track) {
   Object.values(S.calls).forEach(c => {
@@ -1306,66 +1373,46 @@ function swapVideo(track) {
   });
 }
 async function share() {
-  if (isIOS) return toast('Bildschirmfreigabe wird auf iOS nicht unterstützt', 'error');
+  if (isIOS) return toast('Bildschirmfreigabe auf iOS nicht unterstützt', 'error');
   if (S.sharing) return stopShare();
   try {
     const ds = await navigator.mediaDevices.getDisplayMedia({ video: true });
     const t = ds.getVideoTracks()[0];
-    S.sharing = ds;
-    t.onended = stopShare;
+    S.sharing = ds; t.onended = stopShare;
     swapVideo(t);
     const tile = $('tile-me');
-    if (tile) {
-      tile.querySelector('video').srcObject = ds;
-      tile.querySelector('video').classList.remove('mirror');
-    }
-    upd('me');
-    toast('Bildschirmfreigabe aktiv');
-  } catch(e) {
-    toast('Bildschirmfreigabe nicht möglich', 'error');
-  }
+    if (tile) { tile.querySelector('video').srcObject = ds; tile.querySelector('video').classList.remove('mirror'); }
+    upd('me'); toast('Bildschirmfreigabe aktiv');
+  } catch(e) { toast('Bildschirmfreigabe nicht möglich', 'error'); }
 }
 function stopShare() {
   if (!S.sharing) return;
-  S.sharing.getTracks().forEach(t => t.stop());
-  S.sharing = null;
-  const cam = S.stream && S.stream.getVideoTracks()[0];
+  S.sharing.getTracks().forEach(t => t.stop()); S.sharing = null;
+  const cam = S.stream?.getVideoTracks()[0];
   if (cam) swapVideo(cam);
-  const v = $('tile-me') && $('tile-me').querySelector('video');
+  const v = $('tile-me')?.querySelector('video');
   if (v) { v.srcObject = S.stream; applyMirror(); }
   upd('me');
 }
 function copyCode() {
   navigator.clipboard.writeText(S.room).then(() => toast('Code kopiert')).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = S.room;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    toast('Code kopiert');
+    const ta = document.createElement('textarea'); ta.value = S.room; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast('Code kopiert');
   });
 }
 function copyLink() {
   const u = location.origin + location.pathname + '#lobby-' + S.room + (S.roomPass ? '?p=' + btoa(S.roomPass) : '');
   navigator.clipboard.writeText(u).then(() => toast('Link kopiert')).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = u;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    toast('Link kopiert');
+    const ta = document.createElement('textarea'); ta.value = u; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast('Link kopiert');
   });
 }
 async function togglePiP() {
-  if (isIOS) return toast('Bild-in-Bild auf iOS eingeschränkt', 'error');
-  const v = $('tile-me') && $('tile-me').querySelector('video');
+  if (isIOS) return toast('PiP auf iOS eingeschränkt', 'error');
+  const v = $('tile-me')?.querySelector('video');
   if (!v) return;
   try {
     if (document.pictureInPictureElement) await document.exitPictureInPicture();
     else await v.requestPictureInPicture();
-  } catch(e) { toast('Bild-in-Bild nicht unterstützt', 'error'); }
+  } catch(e) { toast('PiP nicht unterstützt', 'error'); }
 }
 
 /* Keyboard */
@@ -1376,6 +1423,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'h' || e.key === 'H') hand();
   if (e.key === 'c' || e.key === 'C') drawer(!$('drawer').classList.contains('translate-x-full'));
   if (e.key === 'f' || e.key === 'F') toggleFocusMode();
+  if (e.key === 'r' || e.key === 'R') toggleRecord();
   if (e.key === 'Escape') {
     drawer(false);
     document.querySelectorAll('#settingsPanel, #participantsPanel').forEach(el => el.classList.add('panel-hidden'));
@@ -1385,33 +1433,27 @@ document.addEventListener('keydown', e => {
 
 /* Leave */
 function teardown() {
-  clearInterval(S.timer);
-  Object.values(S.meters).forEach(clearInterval);
-  S.meters = {};
+  clearInterval(S.timer); clearInterval(S.statsTimer);
+  Object.values(S.meters).forEach(clearInterval); S.meters = {};
+  if (S.recording) stopRecord();
   stopShare();
-  if (S.peer) { try { S.peer.destroy(); } catch(e){} }
-  S.peer = null;
-  S.links = {}; S.calls = {}; S.info = {};
+  if (S.peer) try { S.peer.destroy(); } catch(e){}
+  S.peer = null; S.links = {}; S.calls = {}; S.info = {};
   $('grid').innerHTML = '';
-  $('emojis').classList.add('hidden');
-  drawer(false);
-  S.hand = false;
-  S.focusMode = false;
-  $('grid')?.classList.remove('focus-mode');
-  $('bHand').style.background = '';
+  $('emojis').classList.add('hidden'); drawer(false);
+  S.hand = false; S.focusMode = false; S.pinned = null;
+  $('grid')?.classList.remove('focus-mode','pin-mode');
+  $('bHand')?.classList.remove('active-feature');
+  $('bFocus')?.classList.remove('active-feature');
+  $('bRec')?.classList.remove('active-feature');
+  $('recBadge')?.classList.add('hidden');
 }
 function leave() {
-  teardown();
-  stopMedia();
-  show('home');
-  location.hash = '#home';
+  teardown(); stopMedia(); show('home'); location.hash = '#home';
 }
 
-// Listen for device changes (plug/unplug)
 if (navigator.mediaDevices) {
-  navigator.mediaDevices.addEventListener('devicechange', () => {
-    refreshDevices();
-  });
+  navigator.mediaDevices.addEventListener('devicechange', () => refreshDevices());
 }
 
 route();

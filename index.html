@@ -2,7 +2,9 @@
 <html lang="de" class="h-full">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>FilouMeet</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -71,13 +73,14 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     color: var(--text);
     transition: background 0.35s ease, color 0.35s ease;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
   }
 
-  /* ========== Glass ========== */
   .glass {
     background: var(--glass);
     backdrop-filter: blur(28px) saturate(160%);
@@ -90,33 +93,20 @@
     backdrop-filter: blur(40px) saturate(180%);
     -webkit-backdrop-filter: blur(40px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 
-      0 4px 24px rgba(0,0,0,0.12),
-      0 1px 2px rgba(0,0,0,0.04);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.04);
   }
   body.light .glass-strong {
-    box-shadow: 
-      0 8px 32px rgba(0,0,0,0.06),
-      0 2px 6px rgba(0,0,0,0.03),
-      inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
   }
 
-  /* ========== Accent Glow ========== */
   .accent-glow {
-    box-shadow: 
-      0 0 0 1px rgba(var(--accent-rgb), 0.2),
-      0 4px 20px rgba(var(--accent-rgb), 0.18),
-      0 0 40px rgba(var(--accent-rgb), 0.08);
+    box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.2), 0 4px 20px rgba(var(--accent-rgb), 0.18), 0 0 40px rgba(var(--accent-rgb), 0.08);
   }
 
-  /* ========== Speaking ========== */
   .speak {
-    box-shadow: 
-      0 0 0 3px #22c55e,
-      0 0 24px rgba(34,197,94,0.35) !important;
+    box-shadow: 0 0 0 3px #22c55e, 0 0 24px rgba(34,197,94,0.35) !important;
   }
 
-  /* ========== Controls ========== */
   .control-btn {
     width: 52px;
     height: 52px;
@@ -128,12 +118,9 @@
     border: 1px solid var(--glass-border);
     transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     color: var(--text);
+    touch-action: manipulation;
   }
-  .control-btn:hover {
-    background: var(--control-hover);
-    transform: scale(1.08);
-  }
-  .control-btn:active { transform: scale(0.94); }
+  .control-btn:active { transform: scale(0.92); }
   .control-btn.muted {
     background: #ef4444 !important;
     border-color: transparent;
@@ -152,30 +139,26 @@
     transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 18px rgba(239,68,68,0.35);
     border: none;
+    touch-action: manipulation;
   }
-  .hangup-btn:hover {
-    transform: scale(1.07);
-    box-shadow: 0 6px 24px rgba(239,68,68,0.45);
-  }
+  .hangup-btn:active { transform: scale(0.94); }
 
-  /* ========== Tiles ========== */
   .tile {
     background: var(--bg-elevated);
     border: 1px solid var(--border);
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   }
   body.light .tile {
-    box-shadow: 
-      0 8px 30px rgba(0,0,0,0.04),
-      0 2px 8px rgba(0,0,0,0.02);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.02);
   }
 
   .tile-label {
     background: rgba(0,0,0,0.55);
     backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
   }
@@ -183,7 +166,6 @@
     background: rgba(24,24,27,0.72);
   }
 
-  /* ========== Panels ========== */
   .panel {
     background: var(--glass);
     backdrop-filter: blur(40px) saturate(180%);
@@ -204,7 +186,6 @@
     transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* ========== Animations ========== */
   @keyframes floatUp {
     0% { transform: translateY(0) scale(0.85); opacity: 1; }
     100% { transform: translateY(-200px) scale(1.4); opacity: 0; }
@@ -221,7 +202,6 @@
 
   .mirror { transform: scaleX(-1) !important; }
 
-  /* Empty State */
   #emptyState .orb {
     width: 140px;
     height: 140px;
@@ -237,6 +217,26 @@
   input:focus-visible {
     box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.4);
   }
+
+  /* iOS safe areas */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Prevent iOS video fullscreen takeover */
+  video {
+    object-fit: cover;
+    background: #000;
+  }
+
+  /* Larger touch targets on mobile */
+  @media (max-width: 640px) {
+    .control-btn { width: 48px; height: 48px; }
+    .hangup-btn { width: 58px; height: 48px; }
+  }
 </style>
 </head>
 <body class="h-full overflow-hidden">
@@ -248,13 +248,13 @@
     <div class="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full opacity-10 blur-[80px]" style="background: var(--accent)"></div>
   </div>
 
-  <header class="h-16 px-6 flex items-center justify-between relative z-10">
+  <header class="h-16 px-6 flex items-center justify-between relative z-10 safe-top">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-lg text-white accent-glow" 
            style="background: linear-gradient(135deg, var(--accent), #2563eb)">F</div>
       <span class="text-xl font-semibold tracking-tight">FilouMeet</span>
     </div>
-    <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:scale-105 transition">
+    <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center active:scale-95 transition">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </header>
@@ -270,7 +270,7 @@
             class="flex-1 h-12 px-5 rounded-full glass border-0 text-center sm:text-left placeholder:opacity-50"
             style="color: var(--text)"
             onkeydown="if(event.key==='Enter')joinFromHome()">
-          <button onclick="joinFromHome()" class="h-12 px-7 rounded-full font-semibold text-white transition hover:scale-[1.03]"
+          <button onclick="joinFromHome()" class="h-12 px-7 rounded-full font-semibold text-white transition active:scale-95"
             style="background: var(--accent); box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.35)">
             Beitreten
           </button>
@@ -280,7 +280,7 @@
           <span class="text-sm" style="color: var(--muted)">oder</span>
           <div class="flex-1 h-px" style="background: var(--border)"></div>
         </div>
-        <button onclick="showCreateModal()" class="w-full h-13 py-3.5 rounded-full glass font-medium transition flex items-center justify-center gap-3 hover:scale-[1.02]">
+        <button onclick="showCreateModal()" class="w-full h-13 py-3.5 rounded-full glass font-medium transition flex items-center justify-center gap-3 active:scale-95">
           <i class="fa-solid fa-video" style="color: var(--accent)"></i>
           Neues Meeting starten
         </button>
@@ -300,8 +300,8 @@
           class="w-full h-12 px-4 rounded-2xl glass border-0" style="color: var(--text)">
       </div>
       <div class="flex gap-3 pt-2">
-        <button onclick="$('createModal').classList.add('hidden')" class="flex-1 h-12 rounded-2xl glass font-medium">Abbrechen</button>
-        <button onclick="createRoom()" class="flex-1 h-12 rounded-2xl font-semibold text-white" style="background: var(--accent)">Erstellen</button>
+        <button onclick="$('createModal').classList.add('hidden')" class="flex-1 h-12 rounded-2xl glass font-medium active:scale-95">Abbrechen</button>
+        <button onclick="createRoom()" class="flex-1 h-12 rounded-2xl font-semibold text-white active:scale-95" style="background: var(--accent)">Erstellen</button>
       </div>
     </div>
   </div>
@@ -312,19 +312,19 @@
   <div class="absolute inset-0 overflow-hidden pointer-events-none">
     <div class="absolute top-1/4 right-1/4 w-80 h-80 rounded-full opacity-15 blur-[80px]" style="background: var(--accent)"></div>
   </div>
-  <header class="h-16 px-6 flex items-center justify-between relative z-10">
+  <header class="h-16 px-6 flex items-center justify-between relative z-10 safe-top">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-white accent-glow" style="background: linear-gradient(135deg, var(--accent), #2563eb)">F</div>
       <span class="font-semibold">FilouMeet</span>
     </div>
-    <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center">
+    <button onclick="togglePanel('settingsPanel')" class="w-10 h-10 rounded-full glass flex items-center justify-center active:scale-95">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </header>
   <main class="flex-1 flex items-center justify-center px-4 py-8 relative z-10">
-    <div class="w-full max-w-4xl grid md:grid-cols-2 gap-10 items-center">
+    <div class="w-full max-w-4xl grid md:grid-cols-2 gap-8 md:gap-10 items-center">
       <div class="relative aspect-video rounded-3xl overflow-hidden glass-strong">
-        <video id="prev" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <video id="prev" autoplay playsinline muted webkit-playsinline class="w-full h-full object-cover"></video>
         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3">
           <button onclick="tog('audio')" class="b-mic control-btn"><i></i></button>
           <button onclick="tog('video')" class="b-cam control-btn"><i></i></button>
@@ -347,8 +347,8 @@
             class="w-full h-12 px-5 rounded-full glass border-0" style="color: var(--text)">
         </div>
         <div class="flex gap-3 pt-1">
-          <a href="#home" class="h-12 px-6 rounded-full glass font-medium flex items-center transition">Zurück</a>
-          <button onclick="join()" class="flex-1 h-12 rounded-full font-semibold text-white transition hover:scale-[1.02]" 
+          <a href="#home" class="h-12 px-6 rounded-full glass font-medium flex items-center transition active:scale-95">Zurück</a>
+          <button onclick="join()" class="flex-1 h-12 rounded-full font-semibold text-white transition active:scale-95" 
             style="background: var(--accent); box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.3)">Beitreten</button>
         </div>
       </div>
@@ -359,13 +359,13 @@
 <!-- ==================== ROOM ==================== -->
 <section id="room" class="hidden h-full flex flex-col relative" style="background: var(--bg)">
   <!-- Top Bar -->
-  <div class="h-14 px-5 flex items-center justify-between text-sm shrink-0 relative z-20">
-    <div class="flex items-center gap-2">
-      <span class="font-mono font-medium tracking-wide" id="roomCode"></span>
-      <button onclick="copyCode()" class="w-8 h-8 rounded-full glass flex items-center justify-center transition hover:scale-110" style="color: var(--muted)" title="Code kopieren">
+  <div class="h-14 px-4 sm:px-5 flex items-center justify-between text-sm shrink-0 relative z-20 safe-top">
+    <div class="flex items-center gap-1.5 sm:gap-2">
+      <span class="font-mono font-medium tracking-wide text-xs sm:text-sm" id="roomCode"></span>
+      <button onclick="copyCode()" class="w-8 h-8 rounded-full glass flex items-center justify-center active:scale-95 transition" style="color: var(--muted)" title="Code kopieren">
         <i class="fa-solid fa-copy text-xs"></i>
       </button>
-      <button onclick="copyLink()" class="w-8 h-8 rounded-full glass flex items-center justify-center transition hover:scale-110" style="color: var(--muted)" title="Link kopieren">
+      <button onclick="copyLink()" class="w-8 h-8 rounded-full glass flex items-center justify-center active:scale-95 transition" style="color: var(--muted)" title="Link kopieren">
         <i class="fa-solid fa-link text-xs"></i>
       </button>
       <div class="flex items-center gap-1.5 ml-1" style="color: var(--muted)">
@@ -373,22 +373,22 @@
         <span id="status" class="text-xs">Verbunden</span>
       </div>
     </div>
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-1.5 sm:gap-2">
       <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full glass text-xs" style="color: var(--muted)">
         <i class="fa-solid fa-users text-[10px]"></i>
         <span id="count" class="font-medium" style="color: var(--text)">1</span>
       </div>
-      <button onclick="togglePanel('participantsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:scale-105 transition" title="Teilnehmer">
+      <button onclick="togglePanel('participantsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 transition" title="Teilnehmer">
         <i class="fa-solid fa-user-group text-sm"></i>
       </button>
-      <button onclick="togglePanel('settingsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center hover:scale-105 transition" title="Einstellungen">
+      <button onclick="togglePanel('settingsPanel')" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95 transition" title="Einstellungen">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </div>
   </div>
 
   <!-- Video Grid -->
-  <div id="grid" class="flex-1 p-4 grid gap-4 content-center overflow-y-auto relative z-10"></div>
+  <div id="grid" class="flex-1 p-3 sm:p-4 grid gap-3 sm:gap-4 content-center overflow-y-auto relative z-10"></div>
   <div id="fx" class="absolute inset-0 pointer-events-none overflow-hidden z-30"></div>
 
   <!-- Empty State -->
@@ -401,7 +401,7 @@
     </div>
     <p class="text-xl font-semibold mb-1.5">Du bist allein hier</p>
     <p class="text-sm mb-6" style="color: var(--muted)">Teile den Link, damit andere beitreten können</p>
-    <button onclick="copyLink()" class="h-10 px-5 rounded-full glass text-sm font-medium flex items-center gap-2 hover:scale-105 transition pointer-events-auto">
+    <button onclick="copyLink()" class="h-10 px-5 rounded-full glass text-sm font-medium flex items-center gap-2 active:scale-95 transition pointer-events-auto">
       <i class="fa-solid fa-link text-xs" style="color: var(--accent)"></i>
       Link kopieren
     </button>
@@ -409,16 +409,16 @@
 
   <!-- Chat -->
   <aside id="drawer" class="absolute top-0 right-0 h-full w-full sm:w-[380px] z-40 translate-x-full transition-transform duration-300 flex flex-col panel">
-    <div class="h-14 px-5 flex items-center justify-between shrink-0 border-b" style="border-color: var(--border)">
+    <div class="h-14 px-5 flex items-center justify-between shrink-0 border-b safe-top" style="border-color: var(--border)">
       <span class="font-semibold">Chat</span>
-      <button onclick="drawer(false)" class="w-9 h-9 rounded-full glass flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+      <button onclick="drawer(false)" class="w-9 h-9 rounded-full glass flex items-center justify-center active:scale-95"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div id="msgs" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
-    <div class="p-4 border-t flex gap-2 shrink-0" style="border-color: var(--border)">
+    <div class="p-4 border-t flex gap-2 shrink-0 safe-bottom" style="border-color: var(--border)">
       <input id="chatIn" maxlength="500" placeholder="Nachricht senden…" 
         class="flex-1 h-11 px-4 rounded-full glass border-0 text-sm" style="color: var(--text)"
         onkeydown="if(event.key==='Enter')sendChat()">
-      <button onclick="sendChat()" class="w-11 h-11 rounded-full flex items-center justify-center text-white transition hover:scale-105" style="background: var(--accent)">
+      <button onclick="sendChat()" class="w-11 h-11 rounded-full flex items-center justify-center text-white transition active:scale-95" style="background: var(--accent)">
         <i class="fa-solid fa-paper-plane text-sm"></i>
       </button>
     </div>
@@ -427,7 +427,7 @@
   <div id="emojis" class="hidden absolute bottom-28 left-1/2 -translate-x-1/2 z-40 rounded-2xl p-2 flex gap-1 text-2xl panel"></div>
 
   <!-- Bottom Controls -->
-  <div class="h-[88px] flex items-center justify-center gap-2.5 px-4 shrink-0 relative z-20">
+  <div class="h-[88px] flex items-center justify-center gap-2 sm:gap-2.5 px-3 sm:px-4 shrink-0 relative z-20 safe-bottom">
     <button onclick="tog('audio')" oncontextmenu="showContext(event,'mic')" class="b-mic control-btn" title="Mikrofon"><i></i></button>
     <button onclick="tog('video')" oncontextmenu="showContext(event,'cam')" class="b-cam control-btn" title="Kamera"><i></i></button>
     <button onclick="share()" id="bShare" class="control-btn hidden sm:flex" title="Bildschirm teilen"><i class="fa-solid fa-display"></i></button>
@@ -437,8 +437,8 @@
       <i class="fa-solid fa-comment"></i>
       <span id="unread" class="hidden absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-[10px] flex items-center justify-center font-bold text-white">0</span>
     </button>
-    <button onclick="togglePiP()" class="control-btn hidden sm:flex" title="Bild-in-Bild"><i class="fa-solid fa-window-restore"></i></button>
-    <button onclick="leave()" class="hangup-btn ml-2" title="Auflegen">
+    <button onclick="togglePiP()" id="bPip" class="control-btn hidden sm:flex" title="Bild-in-Bild"><i class="fa-solid fa-window-restore"></i></button>
+    <button onclick="leave()" class="hangup-btn ml-1 sm:ml-2" title="Auflegen">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 2.59 3.4z"/><line x1="23" y1="1" x2="1" y2="23"/>
       </svg>
@@ -447,49 +447,49 @@
 </section>
 
 <!-- Participants -->
-<div id="participantsPanel" class="panel-hidden fixed top-16 right-5 z-50 w-72 rounded-2xl panel p-4">
+<div id="participantsPanel" class="panel-hidden fixed top-16 right-3 sm:right-5 z-50 w-72 rounded-2xl panel p-4">
   <div class="flex items-center justify-between mb-3">
     <span class="font-semibold text-sm">Teilnehmer</span>
-    <button onclick="togglePanel('participantsPanel')" class="w-7 h-7 rounded-full glass flex items-center justify-center"><i class="fa-solid fa-xmark text-xs"></i></button>
+    <button onclick="togglePanel('participantsPanel')" class="w-7 h-7 rounded-full glass flex items-center justify-center active:scale-95"><i class="fa-solid fa-xmark text-xs"></i></button>
   </div>
   <div id="partList" class="space-y-1 max-h-80 overflow-y-auto"></div>
   <div id="hostActions" class="hidden mt-3 pt-3 border-t space-y-2" style="border-color: var(--border)">
-    <button onclick="muteAll(true)" class="w-full h-9 rounded-xl text-sm font-medium glass hover:scale-[1.02] transition">Alle stummschalten</button>
-    <button onclick="muteAll(false)" class="w-full h-9 rounded-xl text-sm font-medium glass hover:scale-[1.02] transition">Stummschaltung aufheben</button>
+    <button onclick="muteAll(true)" class="w-full h-9 rounded-xl text-sm font-medium glass active:scale-95 transition">Alle stummschalten</button>
+    <button onclick="muteAll(false)" class="w-full h-9 rounded-xl text-sm font-medium glass active:scale-95 transition">Stummschaltung aufheben</button>
   </div>
 </div>
 
 <!-- Settings -->
-<div id="settingsPanel" class="panel-hidden fixed top-16 right-5 z-50 w-72 rounded-2xl panel p-4">
+<div id="settingsPanel" class="panel-hidden fixed top-16 right-3 sm:right-5 z-50 w-72 rounded-2xl panel p-4">
   <div class="flex items-center justify-between mb-3">
     <span class="font-semibold text-sm">Einstellungen</span>
-    <button onclick="togglePanel('settingsPanel')" class="w-7 h-7 rounded-full glass flex items-center justify-center"><i class="fa-solid fa-xmark text-xs"></i></button>
+    <button onclick="togglePanel('settingsPanel')" class="w-7 h-7 rounded-full glass flex items-center justify-center active:scale-95"><i class="fa-solid fa-xmark text-xs"></i></button>
   </div>
   <div class="space-y-4 text-sm">
     <div>
       <div class="text-xs mb-1.5" style="color: var(--muted)">Dein Name</div>
       <div class="flex gap-2">
         <input id="setName" maxlength="24" class="flex-1 h-9 px-3 rounded-xl glass border-0 text-sm" style="color: var(--text)">
-        <button onclick="changeName()" class="h-9 px-3 rounded-xl text-xs font-semibold text-white" style="background: var(--accent)">OK</button>
+        <button onclick="changeName()" class="h-9 px-3 rounded-xl text-xs font-semibold text-white active:scale-95" style="background: var(--accent)">OK</button>
       </div>
     </div>
     <div>
       <div class="text-xs mb-1.5" style="color: var(--muted)">Theme</div>
       <div class="flex gap-1.5">
-        <button onclick="setTheme('system')" id="thSystem" class="flex-1 h-8 rounded-xl text-xs glass">System</button>
-        <button onclick="setTheme('dark')" id="thDark" class="flex-1 h-8 rounded-xl text-xs glass">Dunkel</button>
-        <button onclick="setTheme('light')" id="thLight" class="flex-1 h-8 rounded-xl text-xs glass">Hell</button>
+        <button onclick="setTheme('system')" id="thSystem" class="flex-1 h-8 rounded-xl text-xs glass active:scale-95">System</button>
+        <button onclick="setTheme('dark')" id="thDark" class="flex-1 h-8 rounded-xl text-xs glass active:scale-95">Dunkel</button>
+        <button onclick="setTheme('light')" id="thLight" class="flex-1 h-8 rounded-xl text-xs glass active:scale-95">Hell</button>
       </div>
     </div>
     <div>
       <div class="text-xs mb-1.5" style="color: var(--muted)">Akzentfarbe</div>
       <div class="flex gap-2 flex-wrap">
-        <button onclick="setAccent('#3b82f6','59,130,246')" class="w-7 h-7 rounded-full hover:scale-110 transition" style="background:#3b82f6"></button>
-        <button onclick="setAccent('#22c55e','34,197,94')" class="w-7 h-7 rounded-full hover:scale-110 transition" style="background:#22c55e"></button>
-        <button onclick="setAccent('#eab308','234,179,8')" class="w-7 h-7 rounded-full hover:scale-110 transition" style="background:#eab308"></button>
-        <button onclick="setAccent('#ef4444','239,68,68')" class="w-7 h-7 rounded-full hover:scale-110 transition" style="background:#ef4444"></button>
-        <button onclick="setAccent('#a855f7','168,85,247')" class="w-7 h-7 rounded-full hover:scale-110 transition" style="background:#a855f7"></button>
-        <button onclick="setAccent('#f97316','249,115,22')" class="w-7 h-7 rounded-full hover:scale-110 transition" style="background:#f97316"></button>
+        <button onclick="setAccent('#3b82f6','59,130,246')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#3b82f6"></button>
+        <button onclick="setAccent('#22c55e','34,197,94')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#22c55e"></button>
+        <button onclick="setAccent('#eab308','234,179,8')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#eab308"></button>
+        <button onclick="setAccent('#ef4444','239,68,68')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#ef4444"></button>
+        <button onclick="setAccent('#a855f7','168,85,247')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#a855f7"></button>
+        <button onclick="setAccent('#f97316','249,115,22')" class="w-7 h-7 rounded-full active:scale-95 transition" style="background:#f97316"></button>
       </div>
     </div>
     <div class="flex items-center justify-between">
@@ -516,21 +516,30 @@
   <button onclick="ctxAction('settings')" class="w-full text-left px-4 py-2.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-xl mx-1">Einstellungen…</button>
 </div>
 
-<div id="toasts" class="fixed bottom-32 right-5 z-50 space-y-2 pointer-events-none"></div>
+<div id="toasts" class="fixed bottom-32 right-3 sm:right-5 z-50 space-y-2 pointer-events-none"></div>
 
 <script>
 const $ = i => document.getElementById(i);
 const MAX = 8;
 const PFX = 'filoumeet-';
 const EM = ['👍','❤️','👏','🔥','🎉','💡','😂','🙌'];
-const ICE = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] };
+const ICE = { 
+  iceServers: [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    { urls: 'stun:stun2.l.google.com:19302' }
+  ] 
+};
 const AVATAR_COLORS = ['#3b82f6','#22c55e','#eab308','#ef4444','#a855f7','#f97316','#06b6d4','#84cc16','#ec4899','#8b5cf6'];
+
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1);
 
 const S = {
   view: 'home', name: localStorage.fm_name || '', room: '', slot: -1, isHost: false,
   peer: null, stream: null, mic: true, cam: true, hand: false, sharing: null, mirror: localStorage.fm_mirror !== '0',
   links: {}, calls: {}, info: {}, seen: new Set(), meters: {}, unread: 0, ac: null, timer: null,
-  myColor: null, roomPass: '', ctxType: null
+  myColor: null, roomPass: '', ctxType: null, mediaReady: false
 };
 
 const pid = j => PFX + S.room + '-' + j;
@@ -542,7 +551,7 @@ function toast(m, type = 'info') {
   t.className = `px-4 py-3 rounded-2xl text-sm font-medium animate-fade-up ${type === 'error' ? 'bg-red-500 text-white' : 'panel'}`;
   t.textContent = m;
   $('toasts').appendChild(t);
-  setTimeout(() => t.remove(), 3000);
+  setTimeout(() => t.remove(), 3200);
 }
 function setStatus(t) { $('status').textContent = t; }
 function show(v) {
@@ -600,6 +609,11 @@ function applyMirror() {
     $('mirrorBtn').style.background = 'var(--accent)';
     $('mirrorBtn').querySelector('span').style.left = '18px';
   }
+  // Hide screen share + PiP on iOS (not supported properly)
+  if (isIOS) {
+    $('bShare')?.classList.add('hidden');
+    $('bPip')?.classList.add('hidden');
+  }
 })();
 window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
   if ((localStorage.fm_theme || 'system') === 'system') setTheme('system');
@@ -620,6 +634,7 @@ function ctxAction(a) {
   else togglePanel('settingsPanel');
 }
 document.addEventListener('click', () => $('contextMenu').classList.add('panel-hidden'));
+document.addEventListener('touchstart', () => $('contextMenu').classList.add('panel-hidden'), {passive:true});
 
 /* Routing */
 function gen() {
@@ -663,45 +678,110 @@ function route() {
 }
 window.addEventListener('hashchange', route);
 window.addEventListener('beforeunload', () => { if (S.peer) S.peer.destroy(); });
+window.addEventListener('orientationchange', () => setTimeout(layout, 300));
+window.addEventListener('resize', () => layout());
 
-/* Media */
+/* Media - improved for mobile / iOS */
 async function getMedia() {
-  const tries = [
-    { video: { width: { ideal: 1280 }, height: { ideal: 720 } }, audio: true },
+  const constraintsList = [
+    // Prefer lower resolution on mobile for better performance
+    {
+      video: isMobile 
+        ? { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }
+        : { width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true
+      }
+    },
+    { video: { facingMode: 'user' }, audio: true },
     { video: true, audio: true },
     { video: false, audio: true },
     { video: true, audio: false }
   ];
-  for (const c of tries) { try { return await navigator.mediaDevices.getUserMedia(c); } catch(e) {} }
+
+  for (const c of constraintsList) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia(c);
+      return stream;
+    } catch (e) {
+      console.warn('getUserMedia failed with', c, e);
+    }
+  }
   return new MediaStream();
 }
+
 function stopMedia() {
-  if (S.stream) S.stream.getTracks().forEach(t => t.stop());
+  if (S.stream) {
+    S.stream.getTracks().forEach(t => {
+      t.stop();
+    });
+  }
   S.stream = null;
+  S.mediaReady = false;
 }
+
+async function ensureAudioContext() {
+  if (!S.ac) {
+    S.ac = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (S.ac.state === 'suspended') {
+    try { await S.ac.resume(); } catch(e) {}
+  }
+}
+
 async function toLobby() {
   show('lobby');
   $('lobRoom').textContent = S.room;
   $('lobName').value = S.name;
   $('passField').classList.toggle('hidden', !S.roomPass);
+  
   if (!S.stream) {
-    S.stream = await getMedia();
-    S.mic = S.stream.getAudioTracks().length > 0;
-    S.cam = S.stream.getVideoTracks().length > 0;
-    if (!S.stream.getTracks().length) toast('Keine Kamera/Mikrofon gefunden', 'error');
+    try {
+      S.stream = await getMedia();
+      S.mic = S.stream.getAudioTracks().length > 0;
+      S.cam = S.stream.getVideoTracks().length > 0;
+      S.mediaReady = true;
+      
+      if (!S.stream.getTracks().length) {
+        toast('Keine Kamera/Mikrofon gefunden. Bitte Berechtigungen prüfen.', 'error');
+      }
+    } catch (err) {
+      toast('Medienzugriff fehlgeschlagen', 'error');
+      console.error(err);
+    }
   }
-  $('prev').srcObject = S.stream;
+  
+  const prev = $('prev');
+  if (prev && S.stream) {
+    prev.srcObject = S.stream;
+    prev.muted = true;
+    prev.playsInline = true;
+    prev.setAttribute('playsinline', '');
+    prev.setAttribute('webkit-playsinline', '');
+    // Force play on iOS
+    prev.play().catch(() => {});
+  }
   applyMirror();
   syncBtns();
 }
+
 function tog(k) {
   const p = k === 'audio' ? 'mic' : 'cam';
-  if (!S.stream || !S.stream.getTracks().some(t => t.kind === k)) return toast('Kein Gerät gefunden', 'error');
+  if (!S.stream || !S.stream.getTracks().some(t => t.kind === k)) {
+    return toast('Kein Gerät gefunden', 'error');
+  }
   S[p] = !S[p];
   S.stream.getTracks().filter(t => t.kind === k).forEach(t => t.enabled = S[p]);
   syncBtns();
-  if (S.view === 'room') { upd('me'); bc({ t: 'st', ...mine() }); updateEmpty(); }
+  if (S.view === 'room') { 
+    upd('me'); 
+    bc({ t: 'st', ...mine() }); 
+    updateEmpty(); 
+  }
 }
+
 function syncBtns() {
   document.querySelectorAll('.b-mic').forEach(b => {
     b.classList.toggle('muted', !S.mic);
@@ -721,21 +801,33 @@ function mkTile(j, isNew = false) {
   t.id = 'tile-' + j;
   t.className = 'tile relative aspect-video flex items-center justify-center' + (isNew ? ' animate-pop-in' : '');
   t.innerHTML = `
-    <video autoplay playsinline class="w-full h-full object-cover absolute inset-0"></video>
+    <video autoplay playsinline muted webkit-playsinline class="w-full h-full object-cover absolute inset-0"></video>
     <div class="av absolute inset-0 flex items-center justify-center" style="background: var(--bg-elevated)">
-      <div class="w-28 h-28 rounded-full text-white text-4xl font-semibold flex items-center justify-center shadow-lg ring-4 ring-black/5"></div>
+      <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-full text-white text-3xl sm:text-4xl font-semibold flex items-center justify-center shadow-lg ring-4 ring-black/5"></div>
     </div>
-    <div class="absolute bottom-3 left-3 tile-label px-3 py-1.5 text-xs text-white flex items-center gap-2 z-10">
+    <div class="absolute bottom-2 left-2 sm:bottom-3 sm:left-3 tile-label px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs text-white flex items-center gap-1.5 sm:gap-2 z-10">
       <i class="hand fa-solid fa-hand text-amber-400 hidden"></i>
-      <span class="nm font-medium"></span>
+      <span class="nm font-medium truncate max-w-[100px] sm:max-w-[140px]"></span>
       <i class="mic fa-solid text-[10px]"></i>
     </div>`;
-  if (j === 'me') t.querySelector('video').muted = true;
+  
+  const video = t.querySelector('video');
+  if (j === 'me') {
+    video.muted = true;
+  } else {
+    // Remote videos should not be muted
+    video.muted = false;
+  }
+  video.playsInline = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  
   $('grid').appendChild(t);
   layout();
   updateEmpty();
   return t;
 }
+
 function upd(j) {
   const t = $('tile-' + j);
   if (!t) return;
@@ -751,23 +843,34 @@ function upd(j) {
   t.querySelector('.mic').className = 'mic fa-solid text-[10px] ' + (i.mic ? 'fa-microphone text-emerald-400' : 'fa-microphone-slash text-red-400');
   t.querySelector('.hand').classList.toggle('hidden', !i.hand);
 }
+
 function layout() {
   const n = $('grid').children.length;
   const w = innerWidth;
-  const c = w < 640 ? (n < 3 ? 1 : 2) : (n < 2 ? 1 : n < 5 ? 2 : 3);
+  let c;
+  if (w < 480) c = n < 3 ? 1 : 2;
+  else if (w < 900) c = n < 2 ? 1 : n < 5 ? 2 : 3;
+  else c = n < 2 ? 1 : n < 5 ? 2 : 3;
   $('grid').style.gridTemplateColumns = `repeat(${c}, minmax(0, 1fr))`;
   $('count').textContent = n;
 }
+
 function updateEmpty() {
   const n = $('grid').children.length;
   $('emptyState').classList.toggle('hidden', n > 1);
 }
+
 function addTile(j, s) {
   const t = mkTile(j, true);
-  t.querySelector('video').srcObject = s;
+  const video = t.querySelector('video');
+  video.srcObject = s;
+  video.muted = false;
+  // Important for iOS: play after setting srcObject
+  video.play().catch(() => {});
   meter(j, s);
   upd(j);
 }
+
 function dropTile(j) {
   const t = $('tile-' + j);
   if (t) {
@@ -786,21 +889,25 @@ function dropTile(j) {
   if (n) toast(n + ' hat den Raum verlassen');
   renderParticipants();
 }
+
 function meter(j, s) {
   if (!s.getAudioTracks().length) return;
   try {
-    S.ac = S.ac || new (window.AudioContext || window.webkitAudioContext)();
-    const an = S.ac.createAnalyser();
-    an.fftSize = 256;
-    S.ac.createMediaStreamSource(s).connect(an);
-    const d = new Uint8Array(an.frequencyBinCount);
-    clearInterval(S.meters[j]);
-    S.meters[j] = setInterval(() => {
-      an.getByteFrequencyData(d);
-      const lv = d.reduce((a,b) => a+b, 0) / d.length;
-      const t = $('tile-' + j);
-      if (t) t.classList.toggle('speak', lv > 18 && (j !== 'me' || S.mic));
-    }, 200);
+    ensureAudioContext().then(() => {
+      if (!S.ac) return;
+      const an = S.ac.createAnalyser();
+      an.fftSize = 256;
+      const source = S.ac.createMediaStreamSource(s);
+      source.connect(an);
+      const d = new Uint8Array(an.frequencyBinCount);
+      clearInterval(S.meters[j]);
+      S.meters[j] = setInterval(() => {
+        an.getByteFrequencyData(d);
+        const lv = d.reduce((a,b) => a+b, 0) / d.length;
+        const t = $('tile-' + j);
+        if (t) t.classList.toggle('speak', lv > 18 && (j !== 'me' || S.mic));
+      }, 200);
+    });
   } catch(e) {}
 }
 
@@ -833,22 +940,37 @@ function join() {
   S.name = ($('lobName').value.trim() || 'Gast').slice(0, 24);
   localStorage.fm_name = S.name;
   S.myColor = randomColor();
+  
+  // Resume audio context on user gesture (critical for iOS)
+  ensureAudioContext();
+  
   show('room');
   $('roomCode').textContent = S.room;
   setStatus('Verbinde…');
   S.slot = -1; S.links = {}; S.calls = {}; S.info = {}; S.seen = new Set(); S.isHost = false;
   $('grid').innerHTML = ''; $('msgs').innerHTML = '';
+  
   const t = mkTile('me');
-  t.querySelector('video').srcObject = S.stream;
+  const video = t.querySelector('video');
+  video.srcObject = S.stream;
+  video.muted = true;
+  video.play().catch(() => {});
+  
   meter('me', S.stream);
   applyMirror();
   upd('me');
   syncBtns();
   claim(0);
 }
+
 function claim(i) {
   if (i >= MAX) { toast('Raum ist voll (max. 8)', 'error'); return leave(); }
-  const p = new Peer(pid(i), { config: ICE, debug: 0 });
+  const p = new Peer(pid(i), { 
+    config: ICE, 
+    debug: 0,
+    // Better reliability
+    reliable: true
+  });
   let opened = false;
   p.on('open', () => {
     opened = true;
@@ -856,17 +978,24 @@ function claim(i) {
     setup(p);
     setStatus('Verbunden');
     probe();
-    S.timer = setInterval(probe, 4000);
+    S.timer = setInterval(probe, 3500);
     renderParticipants();
   });
   p.on('error', e => {
-    if (e.type === 'unavailable-id' && !opened) { p.destroy(); claim(i + 1); }
+    if (e.type === 'unavailable-id' && !opened) { 
+      p.destroy(); 
+      claim(i + 1); 
+    }
     else if (e.type !== 'peer-unavailable') {
-      if (!S.peer) { toast('Verbindung fehlgeschlagen', 'error'); leave(); }
+      if (!S.peer) { 
+        toast('Verbindung fehlgeschlagen', 'error'); 
+        leave(); 
+      }
       else setStatus('Verbindungsproblem…');
     }
   });
 }
+
 function setup(p) {
   p.on('connection', c => {
     const j = c.metadata && c.metadata.slot;
@@ -881,9 +1010,12 @@ function setup(p) {
   });
   p.on('disconnected', () => {
     setStatus('Getrennt – verbinde neu…');
-    if (!p.destroyed) p.reconnect();
+    if (!p.destroyed) {
+      try { p.reconnect(); } catch(e) {}
+    }
   });
 }
+
 function probe() {
   if (!S.peer || S.peer.destroyed) return;
   for (let j = 0; j < MAX; j++) {
@@ -891,12 +1023,17 @@ function probe() {
     const l = S.links[j];
     if (!l || (!l.open && l.initiated)) {
       if (l) { try { l.close(); } catch(e){} delete S.links[j]; }
-      const c = S.peer.connect(pid(j), { reliable: true, metadata: { slot: S.slot } });
-      c.initiated = true;
-      reg(j, c);
-    } else if (l.open && l.initiated && !S.calls[j]) callPeer(j);
+      try {
+        const c = S.peer.connect(pid(j), { reliable: true, metadata: { slot: S.slot } });
+        c.initiated = true;
+        reg(j, c);
+      } catch(e) {}
+    } else if (l.open && l.initiated && !S.calls[j]) {
+      callPeer(j);
+    }
   }
 }
+
 function reg(j, c) {
   const old = S.links[j];
   if (old && old !== c) { try { old.close(); } catch(e){} }
@@ -910,15 +1047,21 @@ function reg(j, c) {
   c.on('close', () => { if (S.links[j] === c) { delete S.links[j]; dropTile(j); } });
   c.on('error', () => { if (S.links[j] === c) { delete S.links[j]; dropTile(j); } });
 }
+
 function callPeer(j) {
   if (!S.peer || S.peer.destroyed || S.calls[j]) return;
-  hookCall(j, S.peer.call(pid(j), S.stream, { metadata: { slot: S.slot } }));
+  try {
+    hookCall(j, S.peer.call(pid(j), S.stream, { metadata: { slot: S.slot } }));
+  } catch(e) {}
 }
+
 function hookCall(j, c) {
   const o = S.calls[j];
   S.calls[j] = c;
   if (o && o !== c) try { o.close(); } catch(e){}
-  c.on('stream', s => { if (S.calls[j] === c) addTile(j, s); });
+  c.on('stream', s => { 
+    if (S.calls[j] === c) addTile(j, s); 
+  });
   c.on('close', () => { if (S.calls[j] === c) delete S.calls[j]; });
   c.on('error', () => { if (S.calls[j] === c) delete S.calls[j]; });
 }
@@ -926,8 +1069,9 @@ function hookCall(j, c) {
 /* Data */
 function bc(m) {
   m.id = Math.random().toString(36).slice(2) + Date.now();
-  Object.values(S.links).forEach(c => { if (c.open) c.send(m); });
+  Object.values(S.links).forEach(c => { if (c.open) try { c.send(m); } catch(e){} });
 }
+
 function onData(j, d) {
   if (!d || typeof d !== 'object') return;
   if (d.id) { if (S.seen.has(d.id)) return; S.seen.add(d.id); }
@@ -969,11 +1113,13 @@ function changeName() {
   toast('Name geändert');
   renderParticipants();
 }
+
 function muteAll(force) {
   if (!S.isHost) return;
   bc({ t: 'mute', force });
   toast(force ? 'Alle stummgeschaltet' : 'Stummschaltung aufgehoben');
 }
+
 function chat(who, text) {
   const m = document.createElement('div');
   m.className = 'space-y-0.5 animate-fade-up';
@@ -987,6 +1133,7 @@ function chat(who, text) {
     $('unread').classList.remove('hidden');
   }
 }
+
 function sendChat() {
   const v = $('chatIn').value.trim();
   if (!v) return;
@@ -994,17 +1141,24 @@ function sendChat() {
   chat('Du', v);
   bc({ t: 'chat', text: v });
 }
+
 function drawer(open) {
   $('drawer').classList.toggle('translate-x-full', !open);
-  if (open) { S.unread = 0; $('unread').classList.add('hidden'); $('chatIn').focus(); }
+  if (open) { 
+    S.unread = 0; 
+    $('unread').classList.add('hidden'); 
+    setTimeout(() => $('chatIn').focus(), 100);
+  }
 }
+
 EM.forEach(e => {
   const b = document.createElement('button');
   b.textContent = e;
-  b.className = 'w-11 h-11 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center justify-center';
+  b.className = 'w-11 h-11 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition flex items-center justify-center active:scale-95';
   b.onclick = () => { float(e); playPop(); bc({ t: 're', e }); $('emojis').classList.add('hidden'); };
   $('emojis').appendChild(b);
 });
+
 function float(e) {
   const d = document.createElement('div');
   d.className = 'fl';
@@ -1013,19 +1167,23 @@ function float(e) {
   $('fx').appendChild(d);
   setTimeout(() => d.remove(), 2500);
 }
+
 function playPop() {
   try {
-    S.ac = S.ac || new (window.AudioContext || window.webkitAudioContext)();
-    const o = S.ac.createOscillator();
-    const g = S.ac.createGain();
-    o.connect(g); g.connect(S.ac.destination);
-    o.frequency.value = 800;
-    g.gain.value = 0.06;
-    o.start();
-    g.gain.exponentialRampToValueAtTime(0.001, S.ac.currentTime + 0.13);
-    o.stop(S.ac.currentTime + 0.13);
+    ensureAudioContext().then(() => {
+      if (!S.ac) return;
+      const o = S.ac.createOscillator();
+      const g = S.ac.createGain();
+      o.connect(g); g.connect(S.ac.destination);
+      o.frequency.value = 800;
+      g.gain.value = 0.06;
+      o.start();
+      g.gain.exponentialRampToValueAtTime(0.001, S.ac.currentTime + 0.13);
+      o.stop(S.ac.currentTime + 0.13);
+    });
   } catch(e) {}
 }
+
 function hand() {
   S.hand = !S.hand;
   $('bHand').classList.toggle('muted', S.hand);
@@ -1034,15 +1192,22 @@ function hand() {
   upd('me');
   bc({ t: 'st', ...mine() });
 }
+
 function swapVideo(track) {
   Object.values(S.calls).forEach(c => {
     const pc = c.peerConnection;
     if (!pc) return;
     const s = pc.getSenders().find(x => x.track && x.track.kind === 'video');
-    if (s && track) s.replaceTrack(track);
+    if (s && track) {
+      try { s.replaceTrack(track); } catch(e) {}
+    }
   });
 }
+
 async function share() {
+  if (isIOS) {
+    return toast('Bildschirmfreigabe wird auf iOS nicht unterstützt', 'error');
+  }
   if (S.sharing) return stopShare();
   try {
     const ds = await navigator.mediaDevices.getDisplayMedia({ video: true });
@@ -1051,11 +1216,17 @@ async function share() {
     t.onended = stopShare;
     swapVideo(t);
     const tile = $('tile-me');
-    if (tile) { tile.querySelector('video').srcObject = ds; tile.querySelector('video').classList.remove('mirror'); }
+    if (tile) { 
+      tile.querySelector('video').srcObject = ds; 
+      tile.querySelector('video').classList.remove('mirror'); 
+    }
     upd('me');
     toast('Bildschirmfreigabe aktiv');
-  } catch(e) {}
+  } catch(e) {
+    toast('Bildschirmfreigabe nicht möglich', 'error');
+  }
 }
+
 function stopShare() {
   if (!S.sharing) return;
   S.sharing.getTracks().forEach(t => t.stop());
@@ -1063,17 +1234,41 @@ function stopShare() {
   const cam = S.stream && S.stream.getVideoTracks()[0];
   if (cam) swapVideo(cam);
   const v = $('tile-me') && $('tile-me').querySelector('video');
-  if (v) { v.srcObject = S.stream; applyMirror(); }
+  if (v) { 
+    v.srcObject = S.stream; 
+    applyMirror(); 
+  }
   upd('me');
 }
+
 function copyCode() {
-  navigator.clipboard.writeText(S.room).then(() => toast('Code kopiert')).catch(() => prompt('Code:', S.room));
+  navigator.clipboard.writeText(S.room).then(() => toast('Code kopiert')).catch(() => {
+    // Fallback for older iOS
+    const ta = document.createElement('textarea');
+    ta.value = S.room;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Code kopiert');
+  });
 }
+
 function copyLink() {
   const u = location.origin + location.pathname + '#lobby-' + S.room + (S.roomPass ? '?p=' + btoa(S.roomPass) : '');
-  navigator.clipboard.writeText(u).then(() => toast('Link kopiert')).catch(() => prompt('Link:', u));
+  navigator.clipboard.writeText(u).then(() => toast('Link kopiert')).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = u;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('Link kopiert');
+  });
 }
+
 async function togglePiP() {
+  if (isIOS) return toast('Bild-in-Bild wird auf iOS eingeschränkt unterstützt', 'error');
   const v = $('tile-me') && $('tile-me').querySelector('video');
   if (!v) return;
   try {
@@ -1111,6 +1306,7 @@ function teardown() {
   S.hand = false;
   $('bHand').style.background = '';
 }
+
 function leave() {
   teardown();
   stopMedia();
